@@ -7,6 +7,8 @@
   },
   "dependencies": {
     "@nomicfoundation/hardhat-toolbox": "^3.0.0",
-    "@uniswap/v2-periphery": "1.1.0-beta.0"
+    "@uniswap/v2-periphery": "1.1.0-beta.0",
+    "@openzeppelin/contracts": "^5.0.0",
+    "dotenv": "^16.4.0"
   }
 }
