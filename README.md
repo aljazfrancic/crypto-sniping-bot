@@ -1,4 +1,4 @@
-﻿# 💸 Stonks Crypto Sniping Bot
+﻿# 💸🚀 Stonks Crypto Sniping Bot
 
 **Short description:** Blazing‑fast bot that snipes newly‑created liquidity pools on EVM DEXes and scales with ML‑powered forecasting for long‑term edge.
 
