@@ -17,7 +17,7 @@ A high-performance bot for sniping newly created liquidity pools on DEXes. This 
 ## 📋🔧 Prerequisites
 
 * Node.js v16+ and npm
-* Python 3.8+
+* Python (developed on 3.13.3)
 * Git
 * A funded wallet with ETH/BNB for gas and trading
 * RPC endpoint (Alchemy, Infura, QuickNode, etc.)
