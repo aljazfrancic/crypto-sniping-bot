@@ -202,6 +202,10 @@ crypto-sniping-bot/
 4. Update documentation
 5. Submit a pull request
 
+### Roadmap
+
+* [Crypto‑Forecasting Build Guide 🛣️](crpyto-forecasting-build-guide.md)
+
 ## 📜⚖️ License
 
 This project is for educational purposes. Use at your own risk.
@@ -231,10 +235,6 @@ Contributions are welcome! Please:
 * Open an issue for bugs
 * Check existing issues before creating new ones
 * [Discord](https://discord.gg/bZXer5ZttK)
-
-## 🛣️📅 Roadmap
-
-[Crypto‑Forecasting Build Guide](crpyto-forecasting-build-guide.md)
 
 ---
 
