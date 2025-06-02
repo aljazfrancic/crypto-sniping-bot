@@ -1,124 +1,70 @@
-#  Crypto Sniping Bot  Monorepo
+# 💸 Stonks Crypto Sniping Bot
 
-This repository contains **two isolated workspaces**:
+**Short description:** Blazing‑fast bot that snipes newly‑created liquidity pools on EVM DEXes and scales with ML‑powered forecasting for long‑term edge.
 
-| Path | What it holds | Toolchain |
-|------|---------------|-----------|
-| `sniper-contracts/` | Hardhat project with all Solidity code (`Sniper.sol`, `LPLockChecker.sol`, unit tests, deploy scripts) | Node.js & Hardhat |
-| `sniper-bot/` | Async Python bot, honeypot detector, LPlock scoring, pytest tests | Python 3.103.12 |
+## Overview
+The Stonks Crypto Sniping Bot is an end‑to‑end framework that *detects*, *buys* and *exits* profitable tokens seconds after a liquidity pool appears.  
+Phase ➊ delivers an on‑chain sniping contract and a Python daemon that listens for `PairCreated` events. Phase ➋ layers a graph‑based time‑series forecaster on top of live DEX data to identify higher‑conviction trades and cross‑DEX arbitrage.
 
----
+| Layer | Tech | Purpose |
+|-------|------|---------|
+| **Solidity Sniper** | Hardhat + OpenZeppelin | Executes token swaps with slippage + deadline guards |
+| **Python Bot** | web3.py + asyncio | Watches mempool / `PairCreated`, calls sniper, monitors positions |
+| **Forecasting** | PyTorch Geometric | Predicts edge‑weighted token graph to rank opportunities |
+| **Ops** | Docker + GitHub Actions | CI, unit‑tests, automatic deployment |
 
-## 1. Solidity toolbox (`sniper-contracts/`)
+## Architecture
+```
+                  ┌──────────────────────────┐
+                  │  Polygon / Ethereum RPC  │
+                  └────────────┬─────────────┘
+                               │  PairCreated
+                     async WebSocket listener
+                               ▼
+    ┌──────────────┐   call   ┌─────────────────┐
+    │  Python Bot  ├────────► │  Sniper Contract│
+    └─────┬────────┘          └────────┬────────┘
+          │ price stream                  │ bought tokens
+          ▼                               ▼
+    Forecasting Engine             Sell / Exit Logic
+```
 
+## Getting Started
+### Prerequisites
 ```bash
-cd sniper-contracts          # IMPORTANT: run npm inside this folder
-npm install                  # installs local Hardhat + toolbox
-npm run compile              # Compiles all .sol files
-npm test                     # Runs Sniper & LP checker tests
+# Node & Python toolchain
+nvm use 18
+npm i -g hardhat
+python -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt
 ```
 
-*No global Hardhat needed; the CLI is resolved from* `node_modules/.bin`.
-
-### Deploy the LP checker
-
+### Local Test
 ```bash
-npx hardhat run scripts/deploy-lpchecker.js --network <bsc/mainnet | bscTest | localhost>
-# copy the printed address into sniper-bot/.env
+# 1. Run a forked chain
+npx hardhat node --fork https://rpc.ankr.com/eth
+# 2. Deploy contracts & run tests
+npx hardhat test
+# 3. Fire up the bot
+python bot/sniper.py --rpc ws://localhost:8545
 ```
 
----
+## Usage
+* Environment variables live in `.env.example`.
+* The bot logs every step and exposes a REST / Prometheus port for health checks.
+* See `scripts/demo.sh` for a one‑command demo on Polygon Mumbai.
 
-## 2. Python bot (`sniper-bot/`)
+## Roadmap & TODO
+- [ ] **Solidity** – finalize `LPLockChecker` and integrate honeypot detection  
+- [ ] **Python** – mempool monitoring & multi‑tx nonce compatibility  
+- [ ] **Forecasting** – prototype GNN on top‑500‑token graph  
+- [ ] **CI/CD** – GitHub Actions: lint ➜ test ➜ slither ➜ deploy  
+- [ ] **Docs** – architecture diagram & contributor guide  
+- [ ] **Security Audit** – run Slither + MythX before main‑net  
+- [ ] **ROI Tracking** – SQLite → Grafana dashboard  
 
-```powershell
-cd sniper-bot
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1   # Windows PowerShell
-pip install -r requirements.txt
-cp .env.example .env              # fill RPC_HTTP / RPC_WS / PRIVATE_KEY / LP_CHECKER_ADDRESS
-python bot.py
-```
+## Contributing
+PRs are welcome! Please open an issue first to discuss changes.  
+Run `pre-commit run --all-files` before pushing.
 
-**On Bash/macOS**:
-
-```bash
-source .venv/bin/activate
-```
-
-Run unit tests:
-
-```bash
-pytest
-```
-
----
-
-## 3. Folder layout
-
-```
-crypto-sniping-bot/
- README.md           you are here
- .gitignore
- sniper-contracts/
-   contracts/       Sniper.sol, LPLockChecker.sol
-   test/            Sniper + LP checker tests
-   scripts/         deploy-lpchecker.js
-   package.json
- sniper-bot/
-    bot.py
-    honeypot_detector.py
-    test_honeypot.py
-    requirements.txt
-    .env.example
-```
-
----
-
-## 4. Typical dev loop
-
-1. Spin a **fork node** for quick iteration:
-
-   ```bash
-   npx hardhat node --fork https://bsc-rpc.publicnode.com
-   ```
-
-2. Deploy contracts to the fork, paste addresses in `.env`.
-3. Run the bot  confirm it snipes the first test liquidity you add via console.
-4. Iterate on heuristics & tests; push PRs.
-
----
-
- **Educational use only**  Derisk on testnet first; sniping mainnet pools is highly speculative.
-
-## TODO / Roadmap
-
-### Phase 1  Sniping MVP
-- [ ] Finish Solidity **sniping contract** (buy, sell, slippage, deadline; flashloan optional)
-- [ ] Extend **Python bot**
-  - [ ] Listen for `PairCreated` events
-  - [ ] Run honeypot + LPlock checks
-  - [ ] Trigger sniping contract
-  - [ ] Implement simple takeprofit / stoploss sell
-- [ ] Local fork & public **testnet** simulations
-- [ ] Basic logging & metrics
-
-### Phase 2  Forecasting Engine
-- [ ] Build **data pipeline** for historical pool data
-- [ ] Graph representation & dimensionality reduction
-- [ ] Temporal model (LSTM / GNN) to predict edge weights
-- [ ] Integrate scoring into bot
-
-### Phase 3  Scaling & Risk Management
-- [ ] Capital allocation & autohalt rules
-- [ ] CrossDEX arbitrage module
-- [ ] CI/CD, monitoring dashboards
-- [ ] Security audit & multisig treasury
-
-### Infrastructure / Ops
-- [ ] Select RPC provider / run own node
-- [ ] GPU instance for ML training/inference
-- [ ] Database layer (Postgres/TimescaleDB or graph DB)
-- [ ] Cost tracking & alerts
-
-_Derived from the deepseek project plan (20250602)._
+## License
+MIT © 2025 Stonks DAO
