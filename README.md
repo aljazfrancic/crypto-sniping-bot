@@ -12,14 +12,7 @@ A high-performance bot for sniping newly created liquidity pools on DEXes. This 
 
 ## 🏗️ Architecture
 
-```
-┌─────────────────┐     ┌──────────────┐     ┌─────────────┐
-│  Python Bot     │────▶│ Smart Contract│────▶│   DEX       │
-│  (Monitor)      │     │   (Sniper)    │     │  (Router)   │
-└─────────────────┘     └──────────────┘     └─────────────┘
-        │                                             │
-        └─────────────── WebSocket ──────────────────┘
-```
+![Scheme](media/scheme.png "Scheme")
 
 ## 📋 Prerequisites
 
@@ -226,6 +219,10 @@ Contributions are welcome! Please:
 - Open an issue for bugs
 - Check existing issues before creating new ones
 - Join our Discord community (coming soon)
+
+## 👷 Roadmap
+
+[Crypto-Forecasting Build Guide](crpyto-forecasting-build-guide.md)
 
 ---
 
