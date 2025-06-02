@@ -35,11 +35,11 @@ truffle test --network bsc_testnet
 
 # 4. Python Bot Tests – run from sniper-bot folder so requirements.txt is correct
 Set-Location .\sniper-bot
-pytest tests\unit
+
 
 # Unit tests
 Write-Host "Running unit tests..."
-pytest tests/unit
+pytest ../unit
 
 # Integration test
 Write-Host "Running integration test..."
