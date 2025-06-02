@@ -230,7 +230,7 @@ Contributions are welcome! Please:
 
 * Open an issue for bugs
 * Check existing issues before creating new ones
-* Join our Discord community (coming soon)
+* [Discord](https://discord.gg/bZXer5ZttK)
 
 ## 🛣️📅 Roadmap
 
