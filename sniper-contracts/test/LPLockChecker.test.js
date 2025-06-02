@@ -10,25 +10,20 @@ describe("LPLockChecker", function () {
     // Deploy mock token
     const MockToken = await ethers.getContractFactory("MockToken");
     mockToken = await MockToken.deploy();
-    await mockToken.deployed();
-
-    // Deploy mock factory
+        // Deploy mock factory
     const MockFactory = await ethers.getContractFactory("MockFactory");
     mockFactory = await MockFactory.deploy();
-    await mockFactory.deployed();
-
-    // Deploy LPLockChecker
+        // Deploy LPLockChecker
     const LPLockChecker = await ethers.getContractFactory("LPLockChecker");
-    checker = await LPLockChecker.deploy(mockFactory.address);
-    await checker.deployed();
-  });
+    checker = await LPLockChecker.deploy(mockFactory.target);
+      });
 
   it("should return lock status for a pair", async function () {
     // Create a mock pair
-    await mockFactory.createPair(mockToken.address, ethers.constants.AddressZero);
+    await mockFactory.createPair(mockToken.target, ethers.constants.AddressZero);
     
     // Check lock status
-    const status = await checker.getLPLockStatus(mockToken.address);
+    const status = await checker.getLPLockStatus(mockToken.target);
     expect(status.isLocked).to.be.false;
     expect(status.lockReason).to.equal("");
   });
