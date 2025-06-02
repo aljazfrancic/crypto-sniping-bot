@@ -9,9 +9,9 @@
     "deploy:lpchecker": "hardhat run scripts/deploy-lpchecker.js --network localhost"
   },
   "devDependencies": {
-    "hardhat": "^2.22.0",
     "@nomicfoundation/hardhat-toolbox": "^3.0.0",
-    "dotenv": "^16.4.0"
+    "dotenv": "^16.4.0",
+    "hardhat": "^2.22.0"
   },
   "resolutions": {
     "glob": "^9.3.0"
