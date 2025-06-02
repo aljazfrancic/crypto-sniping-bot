@@ -5,8 +5,9 @@
 # 1. Environment Setup
 Write-Host "[Setup] Setting up environment..." -ForegroundColor Cyan
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1   # use Activate.ps1 on Windows
+. .\.venv\Scripts\Activate.ps1          # <-- dot-source, same session!
 pip install -r requirements.txt
+pip install pytest web3                 # ensure test deps (optional)
 
 # 2. Generate Test Configuration
 Write-Host "[Config] Creating test configuration..." -ForegroundColor Cyan
@@ -32,8 +33,9 @@ if (-not (Test-Path "node_modules")) {
 # Run contract tests
 truffle test --network bsc_testnet
 
-# 4. Python Bot Tests
-Write-Host "[Python] Testing Python components..." -ForegroundColor Cyan
+# 4. Python Bot Tests – run from sniper-bot folder so requirements.txt is correct
+Set-Location .\sniper-bot
+pytest tests\unit
 
 # Unit tests
 Write-Host "Running unit tests..."
