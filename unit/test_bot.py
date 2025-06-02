@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import patch, MagicMock
-from sniping_bot import listen_for_pools, execute_snipe
+from ..sniping_bot import listen_for_pools, execute_snipe
 
 @pytest.fixture
 def mock_web3():
