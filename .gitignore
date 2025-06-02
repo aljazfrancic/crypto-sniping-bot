@@ -2,7 +2,7 @@ node_modules/
 artifacts/
 cache/
 .env
-__pycache__/
 .venv/
-.vscode/
+__pycache__/
 .idea/
+.vscode/

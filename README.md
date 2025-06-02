@@ -1,21 +1,33 @@
-# Minimal Crypto Sniping Bot
+# Crypto Sniping Bot – Cleaned & Unified
 
-* `sniper-contracts` – Hardhat project with Sniper.sol   
-* `sniper-bot` – tiny Python bot (≤ 150 LOC)
+This repo now has **one** Node project for the Solidity contracts and tests,
+plus a lightweight Python sniping bot.
 
-## Quick start
-```bash
-cd sniper-contracts
-npm install
-npx hardhat compile
+## Layout
 ```
+contracts/           Sniper.sol
+test/                Hardhat test
+hardhat.config.js    Hardhat + dotenv
+package.json         Hardhat + OZ + dotenv deps
+sniper-bot/          Python async bot
+```
+## Setup
 
 ```bash
-cd ../sniper-bot
+# 1 — install Node deps
+npm install          # installs hardhat locally
+npm run compile      # compiles Sniper.sol
+
+# 2 — run tests
+npm test
+
+# 3 — Python bot
+cd sniper-bot
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env
-# fill in PRIVATE_KEY
+# fill PRIVATE_KEY etc.
 python bot.py
 ```
-Test on test‑net first. Educational use only.
+**Tip:** If you ever see `HH12`, make sure you’re inside the repo folder and
+run scripts via `npm run` or `npx --no-install` so Hardhat uses the local install.
