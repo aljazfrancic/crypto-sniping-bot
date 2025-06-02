@@ -1,4 +1,4 @@
-# 💸 Stonks Crypto Sniping Bot
+﻿# 💸 Stonks Crypto Sniping Bot
 
 **Short description:** Blazing‑fast bot that snipes newly‑created liquidity pools on EVM DEXes and scales with ML‑powered forecasting for long‑term edge.
 
@@ -24,8 +24,8 @@ Phase ➊ delivers an on‑chain sniping contract and a Python daemon that list
     ┌──────────────┐   call   ┌─────────────────┐
     │  Python Bot  ├────────► │  Sniper Contract│
     └─────┬────────┘          └────────┬────────┘
-          │ price stream                  │ bought tokens
-          ▼                               ▼
+          │ price stream               │ bought tokens
+          ▼                            ▼
     Forecasting Engine             Sell / Exit Logic
 ```
 
@@ -65,6 +65,3 @@ python bot/sniper.py --rpc ws://localhost:8545
 ## Contributing
 PRs are welcome! Please open an issue first to discuss changes.  
 Run `pre-commit run --all-files` before pushing.
-
-## License
-MIT © 2025 Stonks DAO
