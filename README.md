@@ -194,14 +194,6 @@ crypto-sniping-bot/
 └── deployments/       # Deployment artifacts
 ```
 
-### Adding Features
-
-1. Create a new branch
-2. Implement your feature
-3. Add tests
-4. Update documentation
-5. Submit a pull request
-
 ### Roadmap
 
 * [Crypto‑Forecasting Build Guide 🛣️](crpyto-forecasting-build-guide.md)
