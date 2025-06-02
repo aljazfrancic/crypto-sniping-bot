@@ -3,27 +3,33 @@ const { ethers } = require("hardhat");
 
 describe("LPLockChecker", function () {
   let checker;
+  let mockToken;
+  let mockFactory;
 
-  before(async function () {
-    // deploy mock factory returning zero address
+  beforeEach(async function () {
+    // Deploy mock token
+    const MockToken = await ethers.getContractFactory("MockToken");
+    mockToken = await MockToken.deploy();
+    await mockToken.deployed();
+
+    // Deploy mock factory
     const MockFactory = await ethers.getContractFactory("MockFactory");
-    const factory = await MockFactory.deploy();
-    await factory.waitForDeployment();
+    mockFactory = await MockFactory.deploy();
+    await mockFactory.deployed();
 
-    // use arbitrary WBNB address for local tests
-    const wbnb = "0xBB4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
-
+    // Deploy LPLockChecker
     const LPLockChecker = await ethers.getContractFactory("LPLockChecker");
-    checker = await LPLockChecker.deploy(factory.target, wbnb);
-    await checker.waitForDeployment();
+    checker = await LPLockChecker.deploy(mockFactory.address);
+    await checker.deployed();
   });
 
-  it("deploys and returns empty status on non-existent pair", async function () {
-    const fakeToken = "0x0000000000000000000000000000000000000001";
-    const status = await checker.checkLPLock(fakeToken);
-
-    expect(status.pair).to.equal("0x0000000000000000000000000000000000000000");
-    expect(status.totalSupply).to.equal(0);
-    expect(status.isSecure).to.equal(false);
+  it("should return lock status for a pair", async function () {
+    // Create a mock pair
+    await mockFactory.createPair(mockToken.address, ethers.constants.AddressZero);
+    
+    // Check lock status
+    const status = await checker.getLPLockStatus(mockToken.address);
+    expect(status.isLocked).to.be.false;
+    expect(status.lockReason).to.equal("");
   });
 });
