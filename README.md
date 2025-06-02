@@ -186,7 +186,7 @@ The bot logs all activities to `sniper_bot.log` and displays statistics every mi
 
 ```
 crypto-sniping-bot/
-├── contracts/          # Solidity smart contracts
+├── contracts/         # Solidity smart contracts
 ├── bot/               # Python bot implementation
 ├── tests/             # Test files
 ├── scripts/           # Deployment and utility scripts
