@@ -64,4 +64,3 @@ python bot/sniper.py --rpc ws://localhost:8545
 
 ## Contributing
 PRs are welcome! Please open an issue first to discuss changes.  
-Run `pre-commit run --all-files` before pushing.
