@@ -196,7 +196,7 @@ crypto-sniping-bot/
 
 ### Roadmap
 
-* [Crypto‑Forecasting Build Guide 🛣️](crpyto-forecasting-build-guide.md)
+* [Crypto‑Forecasting Build Guide 🛣️](crypto-forecasting-build-guide.md)
 
 ## 📜⚖️ License
 
