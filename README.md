@@ -95,7 +95,7 @@ python bot/sniper.py
 tail -f sniper_bot.log
 
 # Run Python tests
-pytest tests/test_bot.py -v
+pytest tests/test_sniper.py -v
 ```
 
 ### Configuration Options
@@ -133,11 +133,11 @@ pytest tests/test_bot.py -v
 ```bash
 # Run all tests
 npm test                    # Solidity tests
-pytest tests/test_bot.py    # Python tests
+pytest tests/test_sniper.py    # Python tests
 
 # Run specific test
 npx hardhat test test/test_contracts.js
-pytest tests/test_bot.py::TestHoneypotChecker -v
+pytest tests/test_sniper.py::TestHoneypotChecker -v
 ```
 
 ## 📊👀 Monitoring
