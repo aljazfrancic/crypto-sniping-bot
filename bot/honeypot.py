@@ -69,7 +69,7 @@ class HoneypotChecker:
     async def _check_contract_code(self, token_address: str) -> bool:
         """Check contract bytecode for suspicious patterns"""
         try:
-            code = await self.w3.eth.get_code(token_address)
+            code = self.w3.eth.get_code(token_address)
             code_hex = code.hex()
             
             # Check for common honeypot patterns in bytecode
@@ -97,7 +97,7 @@ class HoneypotChecker:
     async def _check_honeypot_api(self, token_address: str) -> bool:
         """Check external honeypot detection APIs"""
         # Skip API check if disabled
-        if not self.config.get('USE_HONEYPOT_API', True):
+        if not getattr(self.config, 'USE_HONEYPOT_API', True):
             return False
             
         try:
