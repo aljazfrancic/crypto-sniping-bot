@@ -169,7 +169,7 @@ class SniperBot:
                 return False
                 
             # Check if contract is verified (basic check)
-            code = await self.w3.eth.get_code(token_address)
+            code = self.w3.eth.get_code(token_address)
             if len(code) <= 2:  # '0x' means no code
                 logger.warning(f"Token {token_address} has no contract code")
                 return False

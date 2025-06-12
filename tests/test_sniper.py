@@ -134,7 +134,7 @@ class TestHoneypotChecker:
         checker = HoneypotChecker(mock_w3, mock_config)
         
         # Mock contract code
-        mock_w3.eth.get_code = AsyncMock(return_value=b'0x606060')
+        mock_w3.eth.get_code = Mock(return_value=b'0x606060')
         
         result = await checker._check_contract_code("0xtokenaddress")
         assert isinstance(result, bool)
