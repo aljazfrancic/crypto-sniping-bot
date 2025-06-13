@@ -1,5 +1,7 @@
 # 🪙️🔫🤖 Crypto Sniping Bot MVP
 
+[![CI](https://github.com/aljazfrancic/crypto-sniping-bot/actions/workflows/ci.yml/badge.svg)](https://github.com/aljazfrancic/crypto-sniping-bot/actions/workflows/ci.yml)
+
 A high-performance bot for sniping newly created liquidity pools on DEXes. This MVP provides core functionality for automated token trading with safety features.
 
 ## 🚀⚡ Features
@@ -9,6 +11,8 @@ A high-performance bot for sniping newly created liquidity pools on DEXes. This 
 * **🛡️ Safety First**: Built‑in honeypot detection and slippage protection
 * **💰 Profit Management**: Configurable take‑profit and stop‑loss levels
 * **🌐 Multi‑chain Ready**: Supports Ethereum, BSC, Polygon (one at a time)
+* **🧪 Comprehensive Testing**: Both Solidity and Python components tested
+* **🔄 CI/CD**: Automated testing on every push and pull request
 
 ## 🏗️🖼️ Architecture
 
@@ -16,8 +20,8 @@ A high-performance bot for sniping newly created liquidity pools on DEXes. This 
 
 ## 📋🔧 Prerequisites
 
-* Node.js v16+ and npm
-* Python (developed on 3.13.3)
+* Node.js v18+ and npm
+* Python 3.13+
 * Git
 * A funded wallet with ETH/BNB for gas and trading
 * RPC endpoint (Alchemy, Infura, QuickNode, etc.)
@@ -35,8 +39,8 @@ cd crypto-sniping-bot
 npm install
 
 # Install Python dependencies
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\\Scripts\\activate
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
@@ -76,7 +80,7 @@ npx hardhat run scripts/deploy.js --network bsc
 
 ```bash
 # Activate Python environment
-source venv/bin/activate  # On Windows: venv\\Scripts\\activate
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
 # Run the bot
 python bot/sniper.py
@@ -112,40 +116,52 @@ pytest tests/test_sniper.py -v
 ## 🛡️⚠️ Safety Features
 
 1. **Honeypot Detection**
-
    * Contract bytecode analysis
    * Token function verification
    * External API checks (optional)
 
 2. **Slippage Protection**
-
    * Configurable maximum slippage
    * Automatic calculation based on liquidity
 
 3. **Position Management**
-
    * Maximum position limits
    * Automatic profit taking
    * Stop loss protection
 
 ## 🧪✔️ Testing
 
-```bash
-# Run all tests
-npm test                    # Solidity tests
-pytest tests/test_sniper.py    # Python tests
+The project includes comprehensive testing for both Solidity and Python components:
 
-# Run specific test
-npx hardhat test test/test_contracts.js
+### Solidity Tests
+```bash
+# Run all Hardhat tests
+npx hardhat test
+
+# Run specific test file
+npx hardhat test test/contract.test.js
+```
+
+### Python Tests
+```bash
+# Run all Python tests
+pytest tests/test_sniper.py -v
+
+# Run specific test class
 pytest tests/test_sniper.py::TestHoneypotChecker -v
 ```
+
+### Test Coverage
+- 18 Solidity tests covering contract functionality
+- 21 Python tests covering bot components
+- Continuous Integration on every push and pull request
 
 ## 📊👀 Monitoring
 
 The bot logs all activities to `sniper_bot.log` and displays statistics every minute:
 
 * Total positions opened
-* Active positions with P\&L
+* Active positions with P&L
 * Successful trades
 
 ## ⚠️🔒 Important Security Notes
@@ -161,23 +177,19 @@ The bot logs all activities to `sniper_bot.log` and displays statistics every mi
 ### Common Issues
 
 **"No contract code at address"**
-
 * Ensure the sniper contract is deployed
 * Verify the address in your .env file
 
 **"Insufficient funds"**
-
 * Check wallet balance for both native token and gas
-* Ensure BUY\_AMOUNT is less than your balance
+* Ensure BUY_AMOUNT is less than your balance
 
 **"Connection lost"**
-
 * Check your RPC endpoint
 * Use a reliable WebSocket provider
 
 **High gas fees**
-
-* Adjust GAS\_PRICE\_MULTIPLIER
+* Adjust GAS_PRICE_MULTIPLIER
 * Consider using a different network
 
 ## 🛠️💡 Development
@@ -187,16 +199,22 @@ The bot logs all activities to `sniper_bot.log` and displays statistics every mi
 ```
 crypto-sniping-bot/
 ├── contracts/         # Solidity smart contracts
-├── bot/               # Python bot implementation
-├── tests/             # Test files
-├── scripts/           # Deployment and utility scripts
-├── abi/               # Contract ABIs (generated)
-└── deployments/       # Deployment artifacts
+│   ├── Sniper.sol    # Main sniper contract
+│   └── mocks/        # Mock contracts for testing
+├── bot/              # Python bot implementation
+├── test/             # Hardhat test files
+├── tests/            # Python test files
+├── scripts/          # Deployment and utility scripts
+└── .github/          # GitHub Actions workflows
 ```
 
-### Roadmap
+### Contributing
 
-* [Crypto‑Forecasting Build Guide 🛣️](crypto-forecasting-build-guide.md)
+1. Fork the repository
+2. Create a feature branch
+3. Add tests for new functionality
+4. Ensure all tests pass
+5. Submit a pull request
 
 ## 📜⚖️ License
 
@@ -211,16 +229,6 @@ This project is for educational purposes. Use at your own risk.
 * Never invest more than you can afford to lose
 * Understand the code before using it
 * Be aware of local regulations
-
-## 🤝✨ Contributing
-
-Contributions are welcome! Please:
-
-1. Fork the repository
-2. Create a feature branch
-3. Add tests for new functionality
-4. Ensure all tests pass
-5. Submit a pull request
 
 ## 📞💬 Support
 
