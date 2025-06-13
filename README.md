@@ -8,6 +8,12 @@
 
 A high-performance bot for sniping newly created liquidity pools on DEXes. This MVP provides core functionality for automated token trading with safety features.
 
+## 📚 Documentation
+
+- [Tutorial](docs/tutorial.md) - Step-by-step guide to setting up and using the bot
+- [API Reference](docs/api.md) - Detailed API documentation for all components
+- [Architecture](docs/architecture.md) - System design and component interaction
+
 ---
 
 ## 🚀 Quickstart
@@ -59,7 +65,7 @@ A high-performance bot for sniping newly created liquidity pools on DEXes. This 
 - Ethereum, BSC, and Polygon (one at a time, set via `CHAIN_ID`).
 
 **Q: How do I troubleshoot errors?**
-- See the Troubleshooting section below and check your logs in `sniper_bot.log`.
+- See the [Tutorial](docs/tutorial.md#troubleshooting) and check your logs in `sniper_bot.log`.
 
 **Q: How do I contribute?**
 - See the Contributing section below.
@@ -73,7 +79,7 @@ A high-performance bot for sniping newly created liquidity pools on DEXes. This 
 3. **Executes buy/sell** transactions via the deployed Sniper contract.
 4. **Manages positions** with take-profit and stop-loss logic.
 
-See the [Architecture Diagram](#🏗️🖼️-architecture) for a visual overview.
+See the [Architecture](docs/architecture.md) for a visual overview.
 
 ---
 
@@ -114,6 +120,8 @@ pytest tests/test_sniper.py -v
 | `MIN_LIQUIDITY`  | Minimum pool liquidity (ETH/BNB)    | 5       |
 | `CHECK_HONEYPOT` | Enable honeypot detection           | true    |
 
+For detailed configuration, see the [API Reference](docs/api.md#configuration-reference).
+
 ---
 
 ## 🧪✔️ Testing & Coverage
@@ -142,6 +150,8 @@ pytest tests/test_sniper.py -v
 
 ![Scheme](media/scheme.png "Scheme")
 
+For detailed architecture documentation, see [Architecture](docs/architecture.md).
+
 ---
 
 ## 🛡️⚠️ Safety Features
@@ -158,6 +168,8 @@ pytest tests/test_sniper.py -v
    * Automatic profit taking
    * Stop loss protection
 
+For more details, see the [API Reference](docs/api.md#honeypot-detection).
+
 ---
 
 ## 📊👀 Monitoring
@@ -167,6 +179,8 @@ The bot logs all activities to `sniper_bot.log` and displays statistics every mi
 * Total positions opened
 * Active positions with P&L
 * Successful trades
+
+For advanced monitoring features, see the [API Reference](docs/api.md#monitoring).
 
 ---
 
@@ -188,6 +202,8 @@ The bot logs all activities to `sniper_bot.log` and displays statistics every mi
 - Adjust GAS_PRICE_MULTIPLIER
 - Consider using a different network
 
+For more troubleshooting help, see the [Tutorial](docs/tutorial.md#troubleshooting).
+
 ---
 
 ## 🛠️💡 Development
@@ -206,6 +222,8 @@ crypto-sniping-bot/
 ├── .github/          # GitHub Actions workflows
 └── .env.example      # Example environment config
 ```
+
+For detailed development setup, see the [Tutorial](docs/tutorial.md#installation).
 
 ---
 
