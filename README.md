@@ -8,48 +8,118 @@
 
 A high-performance bot for sniping newly created liquidity pools on DEXes. This MVP provides core functionality for automated token trading with safety features.
 
-## 📚 Documentation
+## Features
+
+- Real-time monitoring of new liquidity pools
+- Automated token buying and selling
+- Honeypot detection
+- Slippage protection
+- Multi-chain support (Ethereum, BSC, Polygon)
+- Performance monitoring and logging
+
+## Quickstart
+
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/crypto-sniping-bot.git
+cd crypto-sniping-bot
+```
+
+2. Install dependencies:
+```bash
+# Install Python dependencies
+pip install -r requirements.txt
+
+# Install Node.js dependencies
+npm install
+```
+
+3. Deploy the Sniper contract:
+```bash
+npx hardhat run scripts/deploy.js --network <network>
+```
+
+4. Configure the bot:
+```bash
+cp .env.example .env
+# Edit .env with your settings
+```
+
+5. Run the bot:
+```bash
+python bot/main.py
+```
+
+## Documentation
 
 - [Tutorial](docs/tutorial.md) - Step-by-step guide to setting up and using the bot
-- [API Reference](docs/api.md) - Detailed API documentation for all components
-- [Architecture](docs/architecture.md) - System design and component interaction
+- [API Reference](docs/api.md) - Detailed documentation of the bot's components and methods
+- [Architecture](docs/architecture.md) - System design and technical details
 
----
+## Testing
 
-## 🚀 Quickstart
+Run the test suite:
+```bash
+# Run Python tests
+pytest
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/aljazfrancic/crypto-sniping-bot.git
-   cd crypto-sniping-bot
-   ```
-2. **Install dependencies**
-   ```bash
-   npm install
-   python -m venv .venv
-   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-   pip install -r requirements.txt
-   ```
-3. **Configure environment**
-   - Copy `.env.example` to `.env` and fill in your values.
-   ```bash
-   cp .env.example .env
-   # Edit .env with your preferred editor
-   ```
-4. **Compile and test contracts**
-   ```bash
-   npx hardhat compile
-   npx hardhat test
-   npx hardhat coverage
-   ```
-5. **Run Python tests and coverage**
-   ```bash
-   pytest --cov=bot tests/
-   ```
-6. **Run the bot**
-   ```bash
-   python bot/sniper.py
-   ```
+# Run Solidity tests
+npx hardhat test
+```
+
+## Configuration
+
+The bot can be configured through environment variables or a `.env` file. See [API Reference](docs/api.md) for detailed configuration options.
+
+## Monitoring
+
+The bot includes a monitoring system that tracks:
+- Trading performance
+- Token positions
+- Error rates
+- System health
+
+See [API Reference](docs/api.md) for monitoring configuration and usage.
+
+## Security Notes
+
+- Never share your private keys
+- Use a dedicated wallet for the bot
+- Start with small amounts
+- Monitor the bot regularly
+- Keep your dependencies updated
+
+## Troubleshooting
+
+Common issues and solutions are documented in the [Tutorial](docs/tutorial.md).
+
+## Development
+
+### Project Structure
+```
+.
+├── bot/              # Python bot code
+├── contracts/        # Solidity contracts
+├── scripts/         # Deployment scripts
+├── tests/           # Test files
+└── docs/            # Documentation
+```
+
+### Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## License
+
+MIT License - see LICENSE file for details
+
+## Disclaimer
+
+This software is for educational purposes only. Use at your own risk. The authors are not responsible for any financial losses incurred through the use of this software.
 
 ---
 
