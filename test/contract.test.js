@@ -95,7 +95,7 @@ describe("Sniper Contract", function () {
             const tokenBalance = await token.balanceOf(sniper.address);
             expect(tokenBalance).to.be.gt(0);
             await expect(
-                sniper.sellToken(token.address, tokenBalance, 0)
+                sniper.sellToken(token.address, tokenBalance)
             ).to.emit(sniper, "TokenSold");
             const ethBalance = await ethers.provider.getBalance(sniper.address);
             expect(ethBalance).to.be.gte(0);
@@ -103,7 +103,7 @@ describe("Sniper Contract", function () {
         it("Should revert if insufficient token balance", async function () {
             const { sniper, token } = await loadFixture(deployContractsFixture);
             await expect(
-                sniper.sellToken(token.address, ethers.utils.parseEther("100"), 0)
+                sniper.sellToken(token.address, ethers.utils.parseEther("100"))
             ).to.be.revertedWith("Insufficient token balance");
         });
     });

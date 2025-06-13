@@ -1,22 +1,82 @@
 # 🪙️🔫🤖 Crypto Sniping Bot MVP
 
 [![CI](https://github.com/aljazfrancic/crypto-sniping-bot/actions/workflows/ci.yml/badge.svg)](https://github.com/aljazfrancic/crypto-sniping-bot/actions/workflows/ci.yml)
+[![Coverage: Python](https://img.shields.io/badge/coverage-pytest--cov-informational)](https://pytest-cov.readthedocs.io/)
+[![Coverage: Solidity](https://img.shields.io/badge/coverage-hardhat--coverage-informational)](https://github.com/sc-forks/solidity-coverage)
+[![Lint: Python](https://img.shields.io/badge/lint-flake8-informational)](https://flake8.pycqa.org/)
+[![Lint: JS](https://img.shields.io/badge/lint-eslint-informational)](https://eslint.org/)
+[![Lint: Solidity](https://img.shields.io/badge/lint-solhint-informational)](https://protofire.github.io/solhint/)
 
 A high-performance bot for sniping newly created liquidity pools on DEXes. This MVP provides core functionality for automated token trading with safety features.
 
-## 🚀⚡ Features
+---
 
-* **⚡ Lightning‑fast Detection**: Monitors blockchain for new pair creation events
-* **🦾 Automated Trading**: Executes buy orders immediately upon liquidity detection
-* **🛡️ Safety First**: Built‑in honeypot detection and slippage protection
-* **💰 Profit Management**: Configurable take‑profit and stop‑loss levels
-* **🌐 Multi‑chain Ready**: Supports Ethereum, BSC, Polygon (one at a time)
-* **🧪 Comprehensive Testing**: Both Solidity and Python components tested
-* **🔄 CI/CD**: Automated testing on every push and pull request
+## 🚀 Quickstart
 
-## 🏗️🖼️ Architecture
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/aljazfrancic/crypto-sniping-bot.git
+   cd crypto-sniping-bot
+   ```
+2. **Install dependencies**
+   ```bash
+   npm install
+   python -m venv .venv
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   pip install -r requirements.txt
+   ```
+3. **Configure environment**
+   - Copy `.env.example` to `.env` and fill in your values.
+   ```bash
+   cp .env.example .env
+   # Edit .env with your preferred editor
+   ```
+4. **Compile and test contracts**
+   ```bash
+   npx hardhat compile
+   npx hardhat test
+   npx hardhat coverage
+   ```
+5. **Run Python tests and coverage**
+   ```bash
+   pytest --cov=bot tests/
+   ```
+6. **Run the bot**
+   ```bash
+   python bot/sniper.py
+   ```
 
-![Scheme](media/scheme.png "Scheme")
+---
+
+## 🤔 FAQ
+
+**Q: Is my private key safe?**
+- Never share your `.env` file. Use a dedicated wallet for the bot.
+
+**Q: How do I update dependencies?**
+- Dependabot is enabled for both Python and Node.js. You'll get PRs for updates.
+
+**Q: What networks are supported?**
+- Ethereum, BSC, and Polygon (one at a time, set via `CHAIN_ID`).
+
+**Q: How do I troubleshoot errors?**
+- See the Troubleshooting section below and check your logs in `sniper_bot.log`.
+
+**Q: How do I contribute?**
+- See the Contributing section below.
+
+---
+
+## 🛠️ How it Works
+
+1. **Monitors blockchain** for new liquidity pool creation events.
+2. **Checks safety** (honeypot, slippage, liquidity, etc.).
+3. **Executes buy/sell** transactions via the deployed Sniper contract.
+4. **Manages positions** with take-profit and stop-loss logic.
+
+See the [Architecture Diagram](#🏗️🖼️-architecture) for a visual overview.
+
+---
 
 ## 📋🔧 Prerequisites
 
@@ -26,67 +86,9 @@ A high-performance bot for sniping newly created liquidity pools on DEXes. This 
 * A funded wallet with ETH/BNB for gas and trading
 * RPC endpoint (Alchemy, Infura, QuickNode, etc.)
 
-## ⚙️🚀 Quick Start
+---
 
-### 1. Clone and Install
-
-```bash
-# Clone the repository
-git clone https://github.com/aljazfrancic/crypto-sniping-bot.git
-cd crypto-sniping-bot
-
-# Install Node dependencies
-npm install
-
-# Install Python dependencies
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-```
-
-### 2. Configure Environment
-
-```bash
-# Copy example environment file
-cp .env.example .env
-
-# Edit .env with your settings
-nano .env  # or use your preferred editor
-```
-
-**Required settings:**
-
-* `RPC_URL`: Your WebSocket RPC endpoint
-* `PRIVATE_KEY`: Your wallet private key (keep this secret!)
-* `CHAIN_ID`: Network to use (1=ETH, 56=BSC, 137=Polygon)
-
-### 3. Deploy Smart Contract
-
-```bash
-# Compile contracts
-npx hardhat compile
-
-# Run tests
-npx hardhat test
-
-# Deploy to network
-npx hardhat run scripts/deploy.js --network bsc
-
-# Add the deployed contract address to .env
-# SNIPER_CONTRACT=0x...
-```
-
-### 4. Run the Bot
-
-```bash
-# Activate Python environment
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-
-# Run the bot
-python bot/sniper.py
-```
-
-## 🧮⚙️ Usage
+## ⚙️🚀 Usage
 
 ### Basic Commands
 
@@ -113,48 +115,52 @@ pytest tests/test_sniper.py -v
 | `MIN_LIQUIDITY`  | Minimum pool liquidity (ETH/BNB)    | 5       |
 | `CHECK_HONEYPOT` | Enable honeypot detection           | true    |
 
+---
+
+## 🧪✔️ Testing & Coverage
+
+- **Python:** `pytest --cov=bot tests/` for coverage report.
+- **Solidity:** `npx hardhat coverage` for contract coverage.
+- **CI:** All tests and linters run on every push and PR.
+
+---
+
+## 📈🧪 Code Coverage
+
+- **Python:** Run `pytest --cov=bot tests/` to see coverage report.
+- **Solidity:** Run `npx hardhat coverage` to see contract coverage.
+
+---
+
+## 🧹 Linting
+
+- **Python:** `flake8 bot tests`
+- **JS:** `npx eslint .`
+- **Solidity:** `npx solhint contracts/**/*.sol`
+
+---
+
+## 🏗️🖼️ Architecture
+
+![Scheme](media/scheme.png "Scheme")
+
+---
+
 ## 🛡️⚠️ Safety Features
 
 1. **Honeypot Detection**
    * Contract bytecode analysis
    * Token function verification
    * External API checks (optional)
-
 2. **Slippage Protection**
    * Configurable maximum slippage
    * Automatic calculation based on liquidity
-
 3. **Position Management**
    * Maximum position limits
    * Automatic profit taking
    * Stop loss protection
 
-## 🧪✔️ Testing
-
-The project includes comprehensive testing for both Solidity and Python components:
-
-### Solidity Tests
-```bash
-# Run all Hardhat tests
-npx hardhat test
-
-# Run specific test file
-npx hardhat test test/contract.test.js
-```
-
-### Python Tests
-```bash
-# Run all Python tests
-pytest tests/test_sniper.py -v
-
-# Run specific test class
-pytest tests/test_sniper.py::TestHoneypotChecker -v
-```
-
-### Test Coverage
-- 18 Solidity tests covering contract functionality
-- 21 Python tests covering bot components
-- Continuous Integration on every push and pull request
+---
 
 ## 📊👀 Monitoring
 
@@ -164,33 +170,27 @@ The bot logs all activities to `sniper_bot.log` and displays statistics every mi
 * Active positions with P&L
 * Successful trades
 
-## ⚠️🔒 Important Security Notes
-
-1. **Never share your private key**
-2. **Use a dedicated wallet for the bot**
-3. **Start with small amounts on testnet**
-4. **Monitor the bot actively**
-5. **Keep your dependencies updated**
+---
 
 ## 🔧❓ Troubleshooting
 
-### Common Issues
-
 **"No contract code at address"**
-* Ensure the sniper contract is deployed
-* Verify the address in your .env file
+- Ensure the sniper contract is deployed
+- Verify the address in your .env file
 
 **"Insufficient funds"**
-* Check wallet balance for both native token and gas
-* Ensure BUY_AMOUNT is less than your balance
+- Check wallet balance for both native token and gas
+- Ensure BUY_AMOUNT is less than your balance
 
 **"Connection lost"**
-* Check your RPC endpoint
-* Use a reliable WebSocket provider
+- Check your RPC endpoint
+- Use a reliable WebSocket provider
 
 **High gas fees**
-* Adjust GAS_PRICE_MULTIPLIER
-* Consider using a different network
+- Adjust GAS_PRICE_MULTIPLIER
+- Consider using a different network
+
+---
 
 ## 🛠️💡 Development
 
@@ -205,20 +205,28 @@ crypto-sniping-bot/
 ├── test/             # Hardhat test files
 ├── tests/            # Python test files
 ├── scripts/          # Deployment and utility scripts
-└── .github/          # GitHub Actions workflows
+├── .github/          # GitHub Actions workflows
+└── .env.example      # Example environment config
 ```
 
-### Contributing
+---
+
+## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch
 3. Add tests for new functionality
-4. Ensure all tests pass
-5. Submit a pull request
+4. Run all tests and linters (`npm test`, `pytest`, `flake8`, `eslint`, `solhint`)
+5. Ensure all tests pass and code is linted
+6. Submit a pull request
+
+---
 
 ## 📜⚖️ License
 
 This project is for educational purposes. Use at your own risk.
+
+---
 
 ## 🚨📢 Disclaimer
 
@@ -229,6 +237,8 @@ This project is for educational purposes. Use at your own risk.
 * Never invest more than you can afford to lose
 * Understand the code before using it
 * Be aware of local regulations
+
+---
 
 ## 📞💬 Support
 

@@ -99,6 +99,7 @@ contract Sniper is Ownable, ReentrancyGuard {
         path[0] = token;
         path[1] = WETH;
 
+        uint256 balanceBefore = address(this).balance;
         router.swapExactTokensForETH(
             amount,
             0, // Accept any amount of ETH
@@ -106,6 +107,10 @@ contract Sniper is Ownable, ReentrancyGuard {
             address(this),
             block.timestamp + deadline
         );
+        uint256 balanceAfter = address(this).balance;
+        uint256 actualReceived = balanceAfter - balanceBefore;
+
+        emit TokenSold(token, amount, actualReceived, block.timestamp);
     }
     
     function updateSlippage(uint256 _maxSlippage) external onlyOwner {
