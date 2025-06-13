@@ -18,8 +18,8 @@ A high-performance bot for sniping newly created liquidity pools on DEXes. This 
 
 ### Prerequisites
 
-* Node.js v18+ and npm
-* Python 3.13+
+* Node.js v16+ and npm v7+
+* Python 3.9+ (tested with 3.13)
 * Git
 * A funded wallet with ETH/BNB for gas and trading
 * RPC endpoint (Alchemy, Infura, QuickNode, etc.)
@@ -35,6 +35,10 @@ cd crypto-sniping-bot
 2. Install dependencies:
 ```bash
 # Install Python dependencies
+python -m venv .venv
+source .venv/bin/activate  # Linux/Mac
+# or
+.venv\Scripts\activate  # Windows
 pip install -r requirements.txt
 
 # Install Node.js dependencies
@@ -43,7 +47,15 @@ npm install
 
 3. Deploy the Sniper contract:
 ```bash
-npx hardhat run scripts/deploy.js --network <network>
+# For testnet
+npx hardhat run scripts/deploy.js --network goerli
+# or
+npx hardhat run scripts/deploy.js --network bscTestnet
+
+# For mainnet
+npx hardhat run scripts/deploy.js --network mainnet
+# or
+npx hardhat run scripts/deploy.js --network bsc
 ```
 
 4. Configure the bot:
@@ -54,7 +66,7 @@ cp .env.example .env
 
 5. Run the bot:
 ```bash
-python bot/main.py
+python -m bot.sniper
 ```
 
 ## 🛠️ Features
@@ -127,10 +139,17 @@ npx solhint contracts/**/*.sol  # Solidity
 ```
 .
 ├── bot/              # Python bot code
+│   ├── blockchain.py # Blockchain interface
+│   ├── config.py     # Configuration management
+│   ├── honeypot.py   # Honeypot detection
+│   ├── monitoring.py # Monitoring system
+│   ├── sniper.py     # Main bot logic
+│   └── trading.py    # Trading operations
 ├── contracts/        # Solidity contracts
 ├── scripts/          # Deployment scripts
-├── tests/            # Test files
-└── docs/             # Documentation
+├── test/            # Solidity tests
+├── tests/           # Python tests
+└── docs/            # Documentation
 ```
 
 ### Contributing
