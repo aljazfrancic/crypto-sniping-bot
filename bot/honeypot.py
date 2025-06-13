@@ -357,3 +357,8 @@ class HoneypotDetector:
         except Exception as e:
             logger.warning(f"Verification check failed: {e}")
             return False
+
+
+class HoneypotChecker(HoneypotDetector):
+    """Backward compatibility alias for HoneypotDetector."""
+    pass

@@ -22,10 +22,7 @@ gas_price = blockchain.get_gas_price()
 from bot.trading import TradingEngine
 
 # Initialize
-trading = TradingEngine(
-    router_address="ROUTER_ADDRESS",
-    factory_address="FACTORY_ADDRESS"
-)
+trading = TradingEngine(blockchain, config)
 
 # Methods
 tx_hash = trading.buy_token(token_address, amount_eth, slippage)
@@ -37,7 +34,7 @@ position = trading.get_position(token_address)
 from bot.honeypot import HoneypotDetector
 
 # Initialize
-detector = HoneypotDetector()
+detector = HoneypotDetector(blockchain)
 
 # Methods
 is_safe = detector.analyze_token(token_address)

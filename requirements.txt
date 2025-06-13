@@ -33,5 +33,5 @@ pylint==2.17.5
 types-requests==2.32.4.20250611
 types-aiofiles>=23.2.0,<24
 
-# Added from the code block
+# Dependency pin for setup tools
 setuptools<81.0.0
