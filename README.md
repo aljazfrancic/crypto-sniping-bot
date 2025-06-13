@@ -23,6 +23,7 @@ A secure and efficient bot for sniping newly created liquidity pairs on decentra
 - [Troubleshooting](docs/troubleshooting.md) - Common issues
 - [FAQ](docs/faq.md) - Frequently asked questions
 - [Changelog](docs/changelog.md) - Version history
+- [Crypto Forecasting Guide](docs/crypto-forecasting-build-guide.md) - Guide to building crypto forecasting models
 
 ## 🚀 Features
 
@@ -32,8 +33,8 @@ A secure and efficient bot for sniping newly created liquidity pairs on decentra
 - 📊 Price manipulation protection
 - 💧 Liquidity verification
 - ⛽ Gas optimization
-- 🔄 Transaction simulation
 - 🔄 Multi-DEX support (Uniswap, PancakeSwap)
+- 🔒 DEX router verification
 
 ## ⚡ Quick Start
 
@@ -90,7 +91,6 @@ This bot implements several security measures to protect against common threats:
 - 🔍 Contract security validation
 - ⛽ Gas price monitoring
 - 🔄 Transaction simulation
-- 🔒 DEX router verification
 
 For detailed security documentation, see [Security Guide](docs/security.md).
 
@@ -124,3 +124,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## ⚠️ Disclaimer
 
 This software is for educational purposes only. Use at your own risk. The authors are not responsible for any financial losses incurred while using this software.
+
+---
+
+_This project was coauthored by Aljaž Frančič, ChatGPT, Claude, DeepSeek, and Cursor._
