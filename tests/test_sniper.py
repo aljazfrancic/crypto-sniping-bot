@@ -192,6 +192,8 @@ class TestHoneypotChecker:
         
         # Check that methods were only called once
         checker._check_contract_code.assert_called_once()
+        checker._check_honeypot_api.assert_called_once()
+        checker._check_token_functions.assert_called_once()
 
 
 class TestConfig:
