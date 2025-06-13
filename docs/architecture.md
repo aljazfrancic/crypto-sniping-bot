@@ -20,6 +20,24 @@ graph TD
     
     C --> H[Sniper Contract]
     H --> G
+
+    subgraph "Safety Layer"
+        D --> I[Contract Analysis]
+        D --> J[Liquidity Check]
+        D --> K[Blacklist Check]
+    end
+
+    subgraph "Trading Layer"
+        C --> L[Position Management]
+        C --> M[Slippage Control]
+        C --> N[Gas Optimization]
+    end
+
+    subgraph "Monitoring Layer"
+        F --> O[Trade Logging]
+        F --> P[Performance Metrics]
+        F --> Q[Backup Management]
+    end
 ```
 
 ## Core Components
@@ -115,16 +133,29 @@ graph TD
 ## Network Support
 
 ### Supported Networks
-- Ethereum Mainnet
-- BSC (Binance Smart Chain)
-- Polygon
+
+| Network | Chain ID | Router Address | Factory Address | WETH Address |
+|---------|----------|----------------|-----------------|--------------|
+| Ethereum | 1 | 0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D | 0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f | 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2 |
+| BSC | 56 | 0x10ED43C718714eb63d5aA57B78B54704E256024E | 0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73 | 0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c |
+| Polygon | 137 | 0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff | 0x5757371414417b8C6CAad45bAeF941aBc7d3Ab32 | 0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270 |
 
 ### Network-Specific Parameters
-- Chain IDs
-- Router addresses
-- Factory addresses
-- WETH addresses
-- Gas price strategies
+
+#### Gas Price Strategies
+- Ethereum: Dynamic gas price with EIP-1559 support
+- BSC: Fixed gas price with multiplier
+- Polygon: Priority fee based on network congestion
+
+#### RPC Requirements
+- WebSocket connection for real-time events
+- HTTP endpoint for transactions
+- Backup RPC providers recommended
+
+#### Network Limitations
+- Ethereum: Higher gas costs, slower block time
+- BSC: Lower gas costs, faster block time
+- Polygon: Lowest gas costs, fastest block time
 
 ## Performance Considerations
 

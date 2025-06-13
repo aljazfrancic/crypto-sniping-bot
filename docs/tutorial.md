@@ -6,8 +6,8 @@ This tutorial will guide you through setting up and using the Crypto Sniping Bot
 
 Before you begin, ensure you have:
 
-1. Python 3.13+ installed
-2. Node.js 18+ installed
+1. Python 3.9+ installed (tested with 3.13)
+2. Node.js 16+ and npm 7+ installed
 3. A funded Ethereum wallet
 4. An RPC endpoint (Alchemy, Infura, etc.)
 
@@ -56,9 +56,13 @@ Before you begin, ensure you have:
    ```bash
    # For testnet
    npx hardhat run scripts/deploy.js --network goerli
+   # or
+   npx hardhat run scripts/deploy.js --network bscTestnet
    
    # For mainnet
    npx hardhat run scripts/deploy.js --network mainnet
+   # or
+   npx hardhat run scripts/deploy.js --network bsc
    ```
 
 2. Add the deployed contract address to your `.env`:
@@ -75,7 +79,7 @@ Before you begin, ensure you have:
 
 2. Monitor logs:
    ```bash
-   tail -f logs/sniper_bot_*.log
+   tail -f sniper_bot.log
    ```
 
 ## Basic Usage
@@ -156,6 +160,10 @@ MIN_LIQUIDITY=5        # Minimum pool liquidity in ETH
 # Safety
 CHECK_HONEYPOT=true    # Enable honeypot detection
 AUTO_SELL=true         # Enable automatic selling
+
+# Network
+CHAIN_ID=1             # 1: Ethereum, 56: BSC, 137: Polygon
+GAS_PRICE_MULTIPLIER=1.2  # Gas price multiplier for faster transactions
 ```
 
 ### Network Selection
@@ -193,7 +201,7 @@ Set `CHAIN_ID` in `.env` to switch networks.
 
 1. Check logs:
    ```bash
-   tail -f logs/sniper_bot_*.log
+   tail -f sniper_bot.log
    ```
 
 2. View metrics:
