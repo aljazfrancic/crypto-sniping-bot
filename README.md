@@ -8,16 +8,23 @@
 
 A high-performance bot for sniping newly created liquidity pools on DEXes. This MVP provides core functionality for automated token trading with safety features.
 
-## Features
+## 📚 Documentation
 
-- Real-time monitoring of new liquidity pools
-- Automated token buying and selling
-- Honeypot detection
-- Slippage protection
-- Multi-chain support (Ethereum, BSC, Polygon)
-- Performance monitoring and logging
+- [Tutorial](docs/tutorial.md) - Step-by-step guide to setting up and using the bot
+- [API Reference](docs/api.md) - Detailed documentation of the bot's components and methods
+- [Architecture](docs/architecture.md) - System design and technical details
 
-## Quickstart
+## 🚀 Quickstart
+
+### Prerequisites
+
+* Node.js v18+ and npm
+* Python 3.13+
+* Git
+* A funded wallet with ETH/BNB for gas and trading
+* RPC endpoint (Alchemy, Infura, QuickNode, etc.)
+
+### Installation
 
 1. Clone the repository:
 ```bash
@@ -50,59 +57,80 @@ cp .env.example .env
 python bot/main.py
 ```
 
-## Documentation
+## 🛠️ Features
 
-- [Tutorial](docs/tutorial.md) - Step-by-step guide to setting up and using the bot
-- [API Reference](docs/api.md) - Detailed documentation of the bot's components and methods
-- [Architecture](docs/architecture.md) - System design and technical details
+- Real-time monitoring of new liquidity pools
+- Automated token buying and selling
+- Honeypot detection
+- Slippage protection
+- Multi-chain support (Ethereum, BSC, Polygon)
+- Performance monitoring and logging
 
-## Testing
+### Safety Features
 
-Run the test suite:
-```bash
-# Run Python tests
-pytest
+1. **Honeypot Detection**
+   * Contract bytecode analysis
+   * Token function verification
+   * External API checks (optional)
+2. **Slippage Protection**
+   * Configurable maximum slippage
+   * Automatic calculation based on liquidity
+3. **Position Management**
+   * Maximum position limits
+   * Automatic profit taking
+   * Stop loss protection
 
-# Run Solidity tests
-npx hardhat test
-```
+## ⚙️ Configuration
 
-## Configuration
+### Basic Settings
 
-The bot can be configured through environment variables or a `.env` file. See [API Reference](docs/api.md) for detailed configuration options.
+| Setting          | Description                         | Default |
+| ---------------- | ----------------------------------- | ------- |
+| `BUY_AMOUNT`     | Amount to spend per snipe (ETH/BNB) | 0.1     |
+| `SLIPPAGE`       | Maximum slippage tolerance (%)      | 5       |
+| `PROFIT_TARGET`  | Take profit at this gain (%)        | 50      |
+| `STOP_LOSS`      | Stop loss at this loss (%)          | 10      |
+| `MIN_LIQUIDITY`  | Minimum pool liquidity (ETH/BNB)    | 5       |
+| `CHECK_HONEYPOT` | Enable honeypot detection           | true    |
 
-## Monitoring
+For detailed configuration options, see the [API Reference](docs/api.md#configuration-reference).
 
-The bot includes a monitoring system that tracks:
+## 📊 Monitoring
+
+The bot includes a comprehensive monitoring system that tracks:
 - Trading performance
 - Token positions
 - Error rates
 - System health
 
-See [API Reference](docs/api.md) for monitoring configuration and usage.
+All activities are logged to `sniper_bot.log` with real-time statistics updates.
 
-## Security Notes
+## 🧪 Testing
 
-- Never share your private keys
-- Use a dedicated wallet for the bot
-- Start with small amounts
-- Monitor the bot regularly
-- Keep your dependencies updated
+### Running Tests
 
-## Troubleshooting
+```bash
+# Run Python tests with coverage
+pytest --cov=bot tests/
 
-Common issues and solutions are documented in the [Tutorial](docs/tutorial.md).
+# Run Solidity tests with coverage
+npx hardhat coverage
 
-## Development
+# Run linters
+npx eslint .  # JavaScript
+npx solhint contracts/**/*.sol  # Solidity
+```
+
+## 🏗️ Development
 
 ### Project Structure
 ```
 .
 ├── bot/              # Python bot code
 ├── contracts/        # Solidity contracts
-├── scripts/         # Deployment scripts
-├── tests/           # Test files
-└── docs/            # Documentation
+├── scripts/          # Deployment scripts
+├── tests/            # Test files
+└── docs/             # Documentation
 ```
 
 ### Contributing
@@ -112,16 +140,6 @@ Common issues and solutions are documented in the [Tutorial](docs/tutorial.md).
 3. Commit your changes
 4. Push to the branch
 5. Create a Pull Request
-
-## License
-
-MIT License - see LICENSE file for details
-
-## Disclaimer
-
-This software is for educational purposes only. Use at your own risk. The authors are not responsible for any financial losses incurred through the use of this software.
-
----
 
 ## 🤔 FAQ
 
@@ -137,201 +155,18 @@ This software is for educational purposes only. Use at your own risk. The author
 **Q: How do I troubleshoot errors?**
 - See the [Tutorial](docs/tutorial.md#troubleshooting) and check your logs in `sniper_bot.log`.
 
-**Q: How do I contribute?**
-- See the Contributing section below.
+## ⚠️ Security Notes
 
----
+- Never share your private keys
+- Use a dedicated wallet for the bot
+- Start with small amounts
+- Monitor the bot regularly
+- Keep your dependencies updated
 
-## 🛠️ How it Works
+## 📄 License
 
-1. **Monitors blockchain** for new liquidity pool creation events.
-2. **Checks safety** (honeypot, slippage, liquidity, etc.).
-3. **Executes buy/sell** transactions via the deployed Sniper contract.
-4. **Manages positions** with take-profit and stop-loss logic.
+MIT License - see LICENSE file for details
 
-See the [Architecture](docs/architecture.md) for a visual overview.
+## ⚠️ Disclaimer
 
----
-
-## 📋🔧 Prerequisites
-
-* Node.js v18+ and npm
-* Python 3.13+
-* Git
-* A funded wallet with ETH/BNB for gas and trading
-* RPC endpoint (Alchemy, Infura, QuickNode, etc.)
-
----
-
-## ⚙️🚀 Usage
-
-### Basic Commands
-
-```bash
-# Run on testnet first
-npx hardhat run scripts/deploy.js --network bscTestnet
-python bot/sniper.py
-
-# Check logs
-tail -f sniper_bot.log
-
-# Run Python tests
-pytest tests/test_sniper.py -v
-```
-
-### Configuration Options
-
-| Setting          | Description                         | Default |
-| ---------------- | ----------------------------------- | ------- |
-| `BUY_AMOUNT`     | Amount to spend per snipe (ETH/BNB) | 0.1     |
-| `SLIPPAGE`       | Maximum slippage tolerance (%)      | 5       |
-| `PROFIT_TARGET`  | Take profit at this gain (%)        | 50      |
-| `STOP_LOSS`      | Stop loss at this loss (%)          | 10      |
-| `MIN_LIQUIDITY`  | Minimum pool liquidity (ETH/BNB)    | 5       |
-| `CHECK_HONEYPOT` | Enable honeypot detection           | true    |
-
-For detailed configuration, see the [API Reference](docs/api.md#configuration-reference).
-
----
-
-## 🧪✔️ Testing & Coverage
-
-- **Python:** `pytest --cov=bot tests/` for coverage report.
-- **Solidity:** `npx hardhat coverage` for contract coverage.
-- **CI:** All tests and linters run on every push and PR.
-
----
-
-## 📈🧪 Code Coverage
-
-- **Python:** Run `pytest --cov=bot tests/` to see coverage report.
-- **Solidity:** Run `npx hardhat coverage` to see contract coverage.
-
----
-
-## 🧹 Linting
-
-- **JS:** `npx eslint .`
-- **Solidity:** `npx solhint contracts/**/*.sol`
-
----
-
-## 🏗️🖼️ Architecture
-
-![Scheme](media/scheme.png "Scheme")
-
-For detailed architecture documentation, see [Architecture](docs/architecture.md).
-
----
-
-## 🛡️⚠️ Safety Features
-
-1. **Honeypot Detection**
-   * Contract bytecode analysis
-   * Token function verification
-   * External API checks (optional)
-2. **Slippage Protection**
-   * Configurable maximum slippage
-   * Automatic calculation based on liquidity
-3. **Position Management**
-   * Maximum position limits
-   * Automatic profit taking
-   * Stop loss protection
-
-For more details, see the [API Reference](docs/api.md#honeypot-detection).
-
----
-
-## 📊👀 Monitoring
-
-The bot logs all activities to `sniper_bot.log` and displays statistics every minute:
-
-* Total positions opened
-* Active positions with P&L
-* Successful trades
-
-For advanced monitoring features, see the [API Reference](docs/api.md#monitoring).
-
----
-
-## 🔧❓ Troubleshooting
-
-**"No contract code at address"**
-- Ensure the sniper contract is deployed
-- Verify the address in your .env file
-
-**"Insufficient funds"**
-- Check wallet balance for both native token and gas
-- Ensure BUY_AMOUNT is less than your balance
-
-**"Connection lost"**
-- Check your RPC endpoint
-- Use a reliable WebSocket provider
-
-**High gas fees**
-- Adjust GAS_PRICE_MULTIPLIER
-- Consider using a different network
-
-For more troubleshooting help, see the [Tutorial](docs/tutorial.md#troubleshooting).
-
----
-
-## 🛠️💡 Development
-
-### Project Structure
-
-```
-crypto-sniping-bot/
-├── contracts/         # Solidity smart contracts
-│   ├── Sniper.sol    # Main sniper contract
-│   └── mocks/        # Mock contracts for testing
-├── bot/              # Python bot implementation
-├── test/             # Hardhat test files
-├── tests/            # Python test files
-├── scripts/          # Deployment and utility scripts
-├── .github/          # GitHub Actions workflows
-└── .env.example      # Example environment config
-```
-
-For detailed development setup, see the [Tutorial](docs/tutorial.md#installation).
-
----
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Add tests for new functionality
-4. Run all tests and linters (`npm test`, `pytest`, `eslint`, `solhint`)
-5. Ensure all tests pass and code is linted
-6. Submit a pull request
-
----
-
-## 📜⚖️ License
-
-This project is for educational purposes. Use at your own risk.
-
----
-
-## 🚨📢 Disclaimer
-
-**IMPORTANT**: Cryptocurrency trading carries significant risk. This bot is provided as‑is with no guarantees. You may lose your entire investment. Always:
-
-* Test thoroughly on testnet first
-* Start with small amounts
-* Never invest more than you can afford to lose
-* Understand the code before using it
-* Be aware of local regulations
-
----
-
-## 📞💬 Support
-
-* Open an issue for bugs
-* Check existing issues before creating new ones
-* [Discord](https://discord.gg/bZXer5ZttK)
-
----
-
-**Remember**: This is a powerful tool. Use it responsibly and always DYOR (Do Your Own Research)! 🌟
+This software is for educational purposes only. Use at your own risk. The authors are not responsible for any financial losses incurred through the use of this software.
