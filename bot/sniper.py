@@ -10,7 +10,7 @@ import signal
 import sys
 from datetime import datetime
 from web3 import Web3
-from web3.middleware import geth_poa_middleware
+from web3.middleware import geth_poa_middleware  # web3.py 6.x compatible import
 import json
 
 from config import Config

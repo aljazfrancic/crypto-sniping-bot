@@ -1,6 +1,8 @@
 """
 Python Bot Tests
 Tests for the sniper bot components
+
+Note: For web3.py 6.x, use 'from web3.middleware import geth_poa_middleware' for PoA middleware.
 """
 
 import sys
