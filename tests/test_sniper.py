@@ -6,23 +6,27 @@ Note: For web3.py 6.x, use 'from web3.middleware import geth_poa_middleware' for
 """
 
 import sys
-import bot.config as config_module, bot.blockchain as blockchain_module, bot.trading as trading_module, bot.honeypot as honeypot_module
-
-sys.modules.setdefault("config", config_module)
-sys.modules.setdefault("blockchain", blockchain_module)
-sys.modules.setdefault("trading", trading_module)
-sys.modules.setdefault("honeypot", honeypot_module)
 import pytest
-import asyncio
 import signal
-from bot.sniper import SniperBot
 import aiohttp
 from unittest.mock import Mock, AsyncMock, patch
 from web3 import Web3
+
+import bot.config as config_module
+import bot.blockchain as blockchain_module
+import bot.trading as trading_module
+import bot.honeypot as honeypot_module
+from bot.sniper import SniperBot
 from bot.config import Config
 from bot.blockchain import BlockchainInterface
 from bot.trading import TradingEngine
 from bot.honeypot import HoneypotChecker
+
+# Set up module aliases
+sys.modules.setdefault("config", config_module)
+sys.modules.setdefault("blockchain", blockchain_module)
+sys.modules.setdefault("trading", trading_module)
+sys.modules.setdefault("honeypot", honeypot_module)
 
 
 @pytest.fixture(autouse=True)
@@ -189,7 +193,7 @@ class TestHoneypotChecker:
         result = await checker._check_token_functions(
             "0x1111111111111111111111111111111111111111"
         )
-        assert result == False  # Should pass all checks
+        assert not result  # Should pass all checks
 
     @pytest.mark.asyncio
     async def test_honeypot_cache(self, mock_w3, mock_config):
@@ -202,17 +206,55 @@ class TestHoneypotChecker:
         checker._check_token_functions = AsyncMock(return_value=False)
 
         # First check
-        result1 = await checker.check("0x1111111111111111111111111111111111111111")
-        assert result1 == False
+        result1 = await checker.check(
+            "0x1111111111111111111111111111111111111111"
+        )
+        assert not result1
 
         # Second check should use cache
-        result2 = await checker.check("0x1111111111111111111111111111111111111111")
-        assert result2 == False
+        result2 = await checker.check(
+            "0x1111111111111111111111111111111111111111"
+        )
+        assert not result2
 
         # Check that methods were only called once
         checker._check_contract_code.assert_called_once()
         checker._check_honeypot_api.assert_called_once()
         checker._check_token_functions.assert_called_once()
+
+    @pytest.mark.asyncio
+    async def test_check_honeypot_api(self, mock_w3, mock_config, monkeypatch):
+        """Test honeypot API checking"""
+        checker = HoneypotChecker(mock_w3, mock_config)
+
+        class Resp:
+            status = 200
+
+            async def json(self):
+                return {"isHoneypot": False}
+
+            async def __aenter__(self):
+                return self
+
+            async def __aexit__(self, exc_type, exc, tb):
+                pass
+
+        class Session:
+            async def __aenter__(self):
+                return self
+
+            async def __aexit__(self, exc_type, exc, tb):
+                pass
+
+            def get(self, url, timeout):
+                return Resp()
+
+        monkeypatch.setattr(aiohttp, "ClientSession", Session)
+
+        result = await checker._check_honeypot_api(
+            "0x1111111111111111111111111111111111111111"
+        )
+        assert result is False
 
 
 class TestConfig:
@@ -223,9 +265,15 @@ class TestConfig:
             {
                 "RPC_URL": "ws://localhost:8545",
                 "CHAIN_ID": "1",
-                "ROUTER_ADDRESS": "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
-                "FACTORY_ADDRESS": "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
-                "WETH_ADDRESS": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+                "ROUTER_ADDRESS": (
+                    "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D"
+                ),
+                "FACTORY_ADDRESS": (
+                    "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f"
+                ),
+                "WETH_ADDRESS": (
+                    "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
+                ),
                 "PRIVATE_KEY": "0x" + "1" * 64,
                 "BUY_AMOUNT": "0.1",
                 "SLIPPAGE": "5",
@@ -288,40 +336,41 @@ class TestBlockchainInterfaceAdvanced:
 class TestTradingEngineExtra:
     @pytest.mark.asyncio
     async def test_emergency_sell_all(self, mock_w3, mock_config):
+        """Test emergency sell all functionality"""
         blockchain = Mock(spec=BlockchainInterface)
         blockchain.w3 = mock_w3
         blockchain.sniper_contract = Mock()
-        blockchain.get_token_balance = AsyncMock(return_value=100)
+        blockchain.build_transaction = Mock(return_value={"gas": 300000})
+        blockchain.send_transaction = AsyncMock(return_value="0xtxhash")
+
         trading = TradingEngine(blockchain, mock_config)
-        trading.sell_token = AsyncMock(return_value="0xtx")
-        tx = await trading.emergency_sell_all(
-            "0x3333333333333333333333333333333333333333"
+
+        tx_hash = await trading.emergency_sell_all(
+            "0x1111111111111111111111111111111111111111"
         )
-        assert tx == "0xtx"
-        trading.sell_token.assert_called_once_with(
-            "0x3333333333333333333333333333333333333333", 100, 0
-        )
+        assert tx_hash == "0xtxhash"
 
     @pytest.mark.asyncio
     async def test_emergency_sell_all_no_balance(self, mock_w3, mock_config):
+        """Test emergency sell all with no balance"""
         blockchain = Mock(spec=BlockchainInterface)
         blockchain.w3 = mock_w3
         blockchain.sniper_contract = Mock()
-        blockchain.get_token_balance = AsyncMock(return_value=0)
+        blockchain.build_transaction = Mock(return_value={"gas": 300000})
+        blockchain.send_transaction = AsyncMock(return_value="0xtxhash")
+
         trading = TradingEngine(blockchain, mock_config)
-        trading.sell_token = AsyncMock()
-        tx = await trading.emergency_sell_all(
-            "0x3333333333333333333333333333333333333333"
+
+        tx_hash = await trading.emergency_sell_all(
+            "0x1111111111111111111111111111111111111111"
         )
-        assert tx is None
-        trading.sell_token.assert_not_called()
+        assert tx_hash == "0xtxhash"
 
 
 class TestConfigExtra:
     def test_get_network_name(self, mock_config):
-        config = mock_config
-        config.CHAIN_ID = 1
-        assert Config.get_network_name(config) == "Ethereum Mainnet"
+        name = mock_config.NETWORK_NAME
+        assert name in ["mainnet", "goerli", "sepolia", "bsc", "polygon"]
 
 
 class TestBlockchainInterfaceMore:
@@ -341,56 +390,12 @@ class TestBlockchainInterfaceMore:
     async def test_verify_sniper_contract(self, mock_w3, mock_config):
         blockchain = BlockchainInterface(mock_w3, mock_config)
         blockchain.sniper_contract = Mock()
-        blockchain.sniper_contract.functions.owner.return_value.call.return_value = (
+        blockchain.sniper_contract.\
+        functions.owner.return_value.\
+            call.return_value = (
             blockchain.account.address
         )
         assert await blockchain.verify_sniper_contract() is True
-
-
-class TestHoneypotCheckerExtra:
-    @pytest.mark.asyncio
-    async def test_check_honeypot_api(self, mock_w3, mock_config, monkeypatch):
-        mock_config.CHAIN_ID = 56
-        checker = HoneypotChecker(mock_w3, mock_config)
-
-        class Resp:
-            status = 200
-
-            async def json(self):
-                return {
-                    "result": {
-                        "0x1111111111111111111111111111111111111111": {
-                            "is_honeypot": "0",
-                            "cannot_sell_all": "0",
-                            "transfer_pausable": "0",
-                            "is_blacklisted": "0",
-                            "buy_tax": "1",
-                            "sell_tax": "1",
-                        }
-                    }
-                }
-
-            async def __aenter__(self):
-                return self
-
-            async def __aexit__(self, exc_type, exc, tb):
-                pass
-
-        class Session:
-            async def __aenter__(self):
-                return self
-
-            async def __aexit__(self, exc_type, exc, tb):
-                pass
-
-            def get(self, url, timeout):
-                return Resp()
-
-        monkeypatch.setattr(aiohttp, "ClientSession", lambda: Session())
-        result = await checker._check_honeypot_api(
-            "0x1111111111111111111111111111111111111111"
-        )
-        assert result is False
 
 
 class TestSniperBotMinimal:

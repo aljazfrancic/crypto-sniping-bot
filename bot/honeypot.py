@@ -7,7 +7,6 @@ import logging
 from web3 import Web3
 import aiohttp
 import asyncio
-from typing import Dict, Any, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -19,6 +18,7 @@ class HoneypotChecker:
         self.w3 = w3
         self.config = config
         self.honeypot_cache = {}
+        self.router_address = None  # Initialize with None or appropriate default
 
     async def check(self, token_address: str) -> bool:
         """
@@ -203,7 +203,7 @@ class HoneypotChecker:
                 name = token.functions.name().call()
                 if name and len(name) > 0:
                     checks_passed += 1
-            except:
+            except Exception:
                 pass
 
             # Check symbol
@@ -212,7 +212,7 @@ class HoneypotChecker:
                 symbol = token.functions.symbol().call()
                 if symbol and len(symbol) > 0 and len(symbol) <= 10:
                     checks_passed += 1
-            except:
+            except Exception:
                 pass
 
             # Check decimals
@@ -221,7 +221,7 @@ class HoneypotChecker:
                 decimals = token.functions.decimals().call()
                 if 0 <= decimals <= 18:
                     checks_passed += 1
-            except:
+            except Exception:
                 pass
 
             # Check total supply
@@ -230,7 +230,7 @@ class HoneypotChecker:
                 total_supply = token.functions.totalSupply().call()
                 if total_supply > 0:
                     checks_passed += 1
-            except:
+            except Exception:
                 pass
 
             # If less than half of checks pass, consider suspicious

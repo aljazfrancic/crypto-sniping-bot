@@ -11,7 +11,6 @@ import sys
 from datetime import datetime
 from web3 import Web3
 from web3.middleware import geth_poa_middleware  # web3.py 6.x compatible import
-import json
 
 from config import Config
 from blockchain import BlockchainInterface
@@ -39,6 +38,7 @@ class SniperBot:
         self.honeypot_checker = HoneypotChecker(self.w3, config)
         self.positions = {}
         self.monitored_pairs = set()
+        self.router_address = None  # Initialize with None or appropriate default
 
         # Setup signal handlers
         signal.signal(signal.SIGINT, self._signal_handler)

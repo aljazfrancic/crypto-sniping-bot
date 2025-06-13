@@ -112,3 +112,8 @@ class TradingEngine:
         except Exception as e:
             logger.error(f"Error in emergency sell: {e}")
             return None
+
+    def set_router_address(self, router_address: str):
+        self.router_address = (
+            router_address
+        )  # Initialize with None or appropriate default

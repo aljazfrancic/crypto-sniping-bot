@@ -23,6 +23,7 @@ class BlockchainInterface:
         self.account = Account.from_key(config.PRIVATE_KEY)
         self.sniper_contract = self._load_sniper_contract()
         self._abi_cache = {}
+        self.router_address = None  # Initialize with None or appropriate default
 
     def _load_sniper_contract(self) -> Optional[Contract]:
         """Load the deployed sniper contract"""

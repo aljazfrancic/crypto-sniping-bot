@@ -87,7 +87,7 @@ class Config:
             int(key, 16)
             return True
 
-        except:
+        except Exception:
             return False
 
     def _validate_config(self):

@@ -3,7 +3,6 @@
 [![CI](https://github.com/aljazfrancic/crypto-sniping-bot/actions/workflows/ci.yml/badge.svg)](https://github.com/aljazfrancic/crypto-sniping-bot/actions/workflows/ci.yml)
 [![Coverage: Python](https://img.shields.io/badge/coverage-pytest--cov-informational)](https://pytest-cov.readthedocs.io/)
 [![Coverage: Solidity](https://img.shields.io/badge/coverage-hardhat--coverage-informational)](https://github.com/sc-forks/solidity-coverage)
-[![Lint: Python](https://img.shields.io/badge/lint-flake8-informational)](https://flake8.pycqa.org/)
 [![Lint: JS](https://img.shields.io/badge/lint-eslint-informational)](https://eslint.org/)
 [![Lint: Solidity](https://img.shields.io/badge/lint-solhint-informational)](https://protofire.github.io/solhint/)
 
@@ -134,7 +133,6 @@ pytest tests/test_sniper.py -v
 
 ## 🧹 Linting
 
-- **Python:** `flake8 bot tests`
 - **JS:** `npx eslint .`
 - **Solidity:** `npx solhint contracts/**/*.sol`
 
@@ -216,7 +214,7 @@ crypto-sniping-bot/
 1. Fork the repository
 2. Create a feature branch
 3. Add tests for new functionality
-4. Run all tests and linters (`npm test`, `pytest`, `flake8`, `eslint`, `solhint`)
+4. Run all tests and linters (`npm test`, `pytest`, `eslint`, `solhint`)
 5. Ensure all tests pass and code is linted
 6. Submit a pull request
 
