@@ -25,7 +25,7 @@ class TradingEngine:
     
     def __init__(self, blockchain: BlockchainInterface, config: Config):
         """Initialize trading engine.
-        
+
         Args:
             blockchain: Blockchain interface
             config: Configuration
@@ -107,7 +107,7 @@ class TradingEngine:
             
             # Simulate transaction
             self._simulate_buy(token_address, amount_wei, amount_out_min)
-            
+
             # Build transaction
             tx = self._build_buy_transaction(token_address, amount_wei, amount_out_min)
             
@@ -358,7 +358,7 @@ class TradingEngine:
                 return 0
                 
             return reserves[1] / reserves[0]
-            
+
         except Exception as e:
             raise TradingError(f"Failed to get token price: {str(e)}")
 

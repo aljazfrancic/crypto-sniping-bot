@@ -147,7 +147,6 @@ npm test
 
 ## 🆘 Need Help?
 
-- Check [Troubleshooting Guide](troubleshooting.md)
-- Join [Discord Community](https://discord.gg/your-server)
-- Open [GitHub Issues](https://github.com/yourusername/crypto-sniping-bot/issues)
-- Read [Documentation](https://docs.your-bot.com) 
+- [Discord Community](https://discord.gg/bZXer5ZttK) - Join our community for support and discussions
+- [GitHub Issues](https://github.com/yourusername/crypto-sniping-bot/issues) - Report bugs or request features
+- [Documentation](https://github.com/yourusername/crypto-sniping-bot/tree/main/docs) - Browse the full documentation 

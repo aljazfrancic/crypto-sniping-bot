@@ -406,7 +406,7 @@ async def debug_tx(tx_hash):
 
 ## 📚 Additional Resources
 
-- [Ethereum Stack Exchange](https://ethereum.stackexchange.com)
-- [Web3.py Documentation](https://web3py.readthedocs.io)
-- [OpenZeppelin Forum](https://forum.openzeppelin.com)
-- [Discord Community](https://discord.gg/your-server) 
+- [Discord Community](https://discord.gg/bZXer5ZttK) - Get help from the community
+- [Ethereum Stack Exchange](https://ethereum.stackexchange.com) - Technical Q&A
+- [Web3.py Documentation](https://web3py.readthedocs.io) - Web3.py reference
+- [OpenZeppelin Forum](https://forum.openzeppelin.com) - Smart contract security 

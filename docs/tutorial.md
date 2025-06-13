@@ -217,14 +217,12 @@ python -m bot.main --trade 0x123... --amount 1.5 --slippage 2.5
 
 ## 📚 Additional Resources
 
-- [API Documentation](api.md)
-- [Security Guide](security.md)
-- [DEX Integration](dex.md)
-- [Discord Community](https://discord.gg/your-server)
+- [Discord Community](https://discord.gg/bZXer5ZttK) - Join our community for support and discussions
+- [GitHub Repository](https://github.com/yourusername/crypto-sniping-bot) - View source code and contribute
+- [Documentation](https://github.com/yourusername/crypto-sniping-bot/tree/main/docs) - Browse the full documentation
 
 ## 🎓 Next Steps
 
 1. Read [API Documentation](api.md)
 2. Explore [Security Features](security.md)
-3. Join [Discord Community](https://discord.gg/your-server)
-4. Start with small trades 
+3. Start with small trades 

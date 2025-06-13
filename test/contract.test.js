@@ -32,7 +32,7 @@ describe("Sniper Contract", function () {
         const factory = await MockFactory.deploy(pairAddress);
         await factory.waitForDeployment();
         const factoryAddress = await factory.getAddress();
-
+        
         // Deploy mock router
         const MockRouter = await ethers.getContractFactory("MockUniswapV2Router");
         const router = await MockRouter.deploy(wethAddress);
