@@ -213,4 +213,4 @@ describe("Sniper Contract", function () {
             expect(price).to.be.gt(0);
         });
     });
-});
+}); 
