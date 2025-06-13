@@ -12,6 +12,7 @@ from eth_utils import to_checksum_address
 from .config import Config
 from .blockchain import BlockchainInterface
 from .honeypot import HoneypotDetector
+from .security import SecurityManager
 
 logger = logging.getLogger(__name__)
 
@@ -32,6 +33,7 @@ class TradingEngine:
         self.blockchain = blockchain
         self.config = config
         self.honeypot = HoneypotDetector(blockchain)
+        self.security = SecurityManager(blockchain, config)
         
         # Initialize contracts
         self._init_contracts()
@@ -97,11 +99,26 @@ class TradingEngine:
             amount_wei = self.blockchain.w3.to_wei(amount_eth, 'ether')
             amount_out_min = self._calculate_min_output(token_address, amount_wei, slippage)
             
+            # Get expected price
+            expected_price = self._get_expected_price(token_address, amount_wei)
+            
+            # Check price manipulation
+            self.security.check_price_manipulation(token_address, expected_price)
+            
             # Simulate transaction
             self._simulate_buy(token_address, amount_wei, amount_out_min)
             
+            # Build transaction
+            tx = self._build_buy_transaction(token_address, amount_wei, amount_out_min)
+            
+            # Add MEV protection
+            tx = self.security.protect_transaction(tx)
+            
+            # Check MEV risk
+            self.security.check_mev_risk(tx)
+            
             # Execute transaction
-            tx_hash = self._execute_buy(token_address, amount_wei, amount_out_min)
+            tx_hash = self._execute_buy(tx)
             
             logger.info(f"Buy transaction sent: {tx_hash}")
             return tx_hash
@@ -143,6 +160,33 @@ class TradingEngine:
         
         return min_output
         
+    def _get_expected_price(
+        self,
+        token_address: str,
+        amount_wei: int
+    ) -> float:
+        """Get expected token price.
+        
+        Args:
+            token_address: Token contract address
+            amount_wei: Input amount in wei
+            
+        Returns:
+            Expected price in ETH
+        """
+        try:
+            # Get amounts out
+            amounts_out = self.router.functions.getAmountsOut(
+                amount_wei,
+                [self.config.weth_address, token_address]
+            ).call()
+            
+            # Calculate price
+            return amounts_out[1] / amount_wei
+            
+        except Exception as e:
+            raise TradingError(f"Failed to get expected price: {str(e)}")
+            
     def _simulate_buy(
         self,
         token_address: str,
@@ -171,13 +215,13 @@ class TradingEngine:
         except ContractLogicError as e:
             raise TradingError(f"Buy simulation failed: {str(e)}")
             
-    def _execute_buy(
+    def _build_buy_transaction(
         self,
         token_address: str,
         amount_wei: int,
         amount_out_min: int
-    ) -> str:
-        """Execute buy transaction.
+    ) -> Dict[str, Any]:
+        """Build buy transaction.
         
         Args:
             token_address: Token contract address
@@ -185,10 +229,9 @@ class TradingEngine:
             amount_out_min: Minimum output amount
             
         Returns:
-            Transaction hash
+            Transaction parameters
         """
-        # Build transaction
-        tx = self.router.functions.swapExactETHForTokens(
+        return self.router.functions.swapExactETHForTokens(
             amount_out_min,
             [self.config.weth_address, token_address],
             self.blockchain.account.address,
@@ -197,15 +240,23 @@ class TradingEngine:
             'from': self.blockchain.account.address,
             'value': amount_wei,
             'gas': self._estimate_gas(token_address, amount_wei, amount_out_min),
-            'gasPrice': self._get_gas_price(),
             'nonce': self.blockchain.w3.eth.get_transaction_count(
                 self.blockchain.account.address
             )
         })
         
+    def _execute_buy(self, transaction: Dict[str, Any]) -> str:
+        """Execute buy transaction.
+        
+        Args:
+            transaction: Transaction parameters
+            
+        Returns:
+            Transaction hash
+        """
         # Sign and send transaction
         signed_tx = self.blockchain.w3.eth.account.sign_transaction(
-            tx,
+            transaction,
             self.config.private_key
         )
         return self.blockchain.w3.eth.send_raw_transaction(signed_tx.rawTransaction)
@@ -240,15 +291,6 @@ class TradingEngine:
             logger.warning(f"Gas estimation failed: {e}")
             return 300000  # Fallback gas limit
             
-    def _get_gas_price(self) -> int:
-        """Get gas price with multiplier.
-        
-        Returns:
-            Gas price in wei
-        """
-        base_price = self.blockchain.w3.eth.gas_price
-        return int(base_price * self.config.gas_price_multiplier)
-        
     def get_position(self, token_address: str) -> Dict[str, Any]:
         """Get current position details.
         
