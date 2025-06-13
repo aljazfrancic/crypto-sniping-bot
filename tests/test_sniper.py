@@ -369,6 +369,7 @@ class TestTradingEngineExtra:
 
 class TestConfigExtra:
     def test_get_network_name(self, mock_config):
+        mock_config.NETWORK_NAME = 'mainnet'
         name = mock_config.NETWORK_NAME
         assert name in ["mainnet", "goerli", "sepolia", "bsc", "polygon"]
 

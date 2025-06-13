@@ -12,10 +12,10 @@ from datetime import datetime
 from web3 import Web3
 from web3.middleware import geth_poa_middleware  # web3.py 6.x compatible import
 
-from config import Config
-from blockchain import BlockchainInterface
-from trading import TradingEngine
-from honeypot import HoneypotChecker
+from bot.config import Config
+from bot.blockchain import BlockchainInterface
+from bot.trading import TradingEngine
+from bot.honeypot import HoneypotChecker
 
 # Configure logging
 logging.basicConfig(
