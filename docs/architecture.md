@@ -1,8 +1,8 @@
-# Architecture Documentation
+# Architecture
 
 ## System Overview
 
-The Crypto Sniping Bot is a high-performance automated trading system designed to monitor and trade newly created liquidity pools on decentralized exchanges (DEXes). The system combines smart contracts for secure trading with a Python-based monitoring and execution engine.
+High-performance automated trading system for DEX liquidity pools.
 
 ## Architecture Diagram
 
@@ -42,88 +42,56 @@ graph TD
 
 ## Core Components
 
-### 1. Smart Contracts (`contracts/`)
+### Smart Contracts
+- `Sniper.sol`: Main trading contract
+- `MockWETH.sol`: Wrapped ETH
+- `MockERC20.sol`: Token implementation
+- `MockUniswapV2Pair.sol`: DEX pair
+- `MockUniswapV2Factory.sol`: DEX factory
+- `MockUniswapV2Router.sol`: DEX router
 
-#### Sniper Contract (`Sniper.sol`)
-- Handles token buying and selling operations
-- Implements safety checks and slippage protection
-- Manages token blacklisting
-- Controls withdrawals and emergency functions
-
-#### Mock Contracts (`mocks/`)
-- `MockWETH.sol`: Wrapped ETH implementation
-- `MockERC20.sol`: ERC20 token implementation
-- `MockUniswapV2Pair.sol`: DEX pair simulation
-- `MockUniswapV2Factory.sol`: DEX factory simulation
-- `MockUniswapV2Router.sol`: DEX router simulation
-
-### 2. Python Bot (`bot/`)
-
-#### Blockchain Interface (`blockchain.py`)
-- Manages blockchain interactions
-- Handles RPC communication
-- Provides token and balance queries
-- Manages transaction signing and sending
-
-#### Trading Engine (`trading.py`)
-- Executes buy/sell operations
-- Manages position tracking
-- Implements trading strategies
-- Handles slippage calculations
-
-#### Honeypot Detection (`honeypot.py`)
-- Analyzes token contracts
-- Checks for malicious functions
-- Verifies token liquidity
-- Implements blacklist checking
-
-#### Configuration (`config.py`)
-- Manages environment variables
-- Validates configuration settings
-- Provides network-specific parameters
-- Handles private key management
-
-#### Monitoring (`monitoring.py`)
-- Logs trading activities
-- Tracks performance metrics
-- Manages backups
-- Provides real-time statistics
+### Python Bot
+- `blockchain.py`: Blockchain interface
+- `trading.py`: Trading engine
+- `honeypot.py`: Honeypot detection
+- `config.py`: Configuration
+- `monitoring.py`: Monitoring
 
 ## Data Flow
 
 1. **Event Monitoring**
-   - Bot monitors blockchain for new liquidity pools
-   - Filters events based on configured criteria
-   - Identifies potential trading opportunities
+   - Monitor new pools
+   - Filter events
+   - Identify opportunities
 
 2. **Safety Checks**
-   - Analyzes token contract code
-   - Verifies liquidity levels
-   - Checks for honeypot characteristics
-   - Validates slippage parameters
+   - Analyze contracts
+   - Verify liquidity
+   - Check honeypot
+   - Validate slippage
 
 3. **Trade Execution**
-   - Calculates optimal trade parameters
-   - Executes buy transaction via Sniper contract
-   - Monitors transaction status
-   - Updates position tracking
+   - Calculate parameters
+   - Execute buy
+   - Monitor status
+   - Track position
 
 4. **Position Management**
-   - Tracks token balances
-   - Monitors price movements
-   - Executes take-profit/stop-loss
-   - Manages emergency sells
+   - Track balances
+   - Monitor prices
+   - Execute take-profit/stop-loss
+   - Handle emergency sells
 
 ## Security Features
 
-### Smart Contract Security
+### Smart Contract
 - Reentrancy protection
 - Access control
 - Slippage limits
 - Emergency functions
 - Blacklist management
 
-### Bot Security
+### Bot
 - Private key protection
 - Transaction validation
 - Honeypot detection
@@ -140,40 +108,40 @@ graph TD
 | BSC | 56 | 0x10ED43C718714eb63d5aA57B78B54704E256024E | 0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73 | 0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c |
 | Polygon | 137 | 0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff | 0x5757371414417b8C6CAad45bAeF941aBc7d3Ab32 | 0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270 |
 
-### Network-Specific Parameters
+### Network Parameters
 
-#### Gas Price Strategies
-- Ethereum: Dynamic gas price with EIP-1559 support
-- BSC: Fixed gas price with multiplier
-- Polygon: Priority fee based on network congestion
+#### Gas Strategies
+- Ethereum: Dynamic with EIP-1559
+- BSC: Fixed with multiplier
+- Polygon: Priority fee based
 
 #### RPC Requirements
-- WebSocket connection for real-time events
-- HTTP endpoint for transactions
-- Backup RPC providers recommended
+- WebSocket for events
+- HTTP for transactions
+- Backup providers
 
-#### Network Limitations
-- Ethereum: Higher gas costs, slower block time
-- BSC: Lower gas costs, faster block time
-- Polygon: Lowest gas costs, fastest block time
+#### Network Limits
+- Ethereum: High gas, slow blocks
+- BSC: Low gas, fast blocks
+- Polygon: Lowest gas, fastest blocks
 
-## Performance Considerations
+## Performance
 
-### Optimization Techniques
+### Optimization
 - Efficient event filtering
-- Batch transaction processing
-- Gas price optimization
-- Caching mechanisms
+- Batch transactions
+- Gas optimization
+- Caching
 - Parallel processing
 
-### Resource Management
-- Memory usage optimization
+### Resources
+- Memory optimization
 - Connection pooling
 - Error handling
 - Rate limiting
 - Backup strategies
 
-## Monitoring and Maintenance
+## Monitoring
 
 ### Logging
 - Transaction logs
@@ -182,56 +150,56 @@ graph TD
 - Position updates
 - System health
 
-### Backup and Recovery
-- Configuration backups
-- Position state backups
+### Backup
+- Config backups
+- Position state
 - Recovery procedures
-- Data consistency checks
+- Data consistency
 
-## Development Guidelines
+## Development
 
-### Code Organization
-- Modular architecture
-- Clear separation of concerns
-- Consistent naming conventions
-- Comprehensive documentation
-- Type hints and validation
+### Code
+- Modular design
+- Clear separation
+- Consistent naming
+- Documentation
+- Type hints
 
-### Testing Strategy
+### Testing
 - Unit tests
 - Integration tests
 - Contract tests
 - Performance tests
 - Security audits
 
-## Deployment Architecture
+## Deployment
 
 ### Requirements
-- Node.js environment
-- Python environment
+- Node.js
+- Python
 - RPC endpoint
 - Funded wallet
-- Storage for logs and backups
+- Storage
 
-### Deployment Process
-1. Contract deployment
-2. Configuration setup
-3. Environment preparation
-4. Bot initialization
-5. Monitoring setup
+### Process
+1. Deploy contract
+2. Configure settings
+3. Prepare environment
+4. Initialize bot
+5. Setup monitoring
 
-## Future Considerations
+## Future
 
 ### Scalability
-- Multi-chain support
-- Advanced trading strategies
+- Multi-chain
+- Advanced strategies
 - Enhanced monitoring
-- Performance optimization
-- Additional safety features
+- Performance
+- Safety features
 
 ### Integration
 - External APIs
 - Price feeds
 - Trading signals
-- Analytics platforms
-- Alert systems 
+- Analytics
+- Alerts 
