@@ -1,81 +1,228 @@
 # 📖 Tutorial
 
-## 🛠️ Setup
+This tutorial will guide you through using the Crypto Sniping Bot effectively.
 
-1. Install dependencies:
+## 📋 Prerequisites
+
+- Completed [Installation Guide](installation.md)
+- Basic understanding of DEX trading
+- Some ETH for gas fees
+- MetaMask or similar wallet
+
+## 🚀 Getting Started
+
+### 1. Start the Bot
+
 ```bash
-pip install -r requirements.txt
-npm install
+# Start in monitoring mode
+python -m bot.main --monitor
+
+# Check bot status
+python -m bot.main --status
 ```
 
-2. Deploy contract:
-```bash
-# Testnet
-npx hardhat run scripts/deploy.js --network goerli
+### 2. Configure Trading
 
-# Mainnet
-npx hardhat run scripts/deploy.js --network mainnet
+1. Set trading parameters in `.env`:
+```env
+# Trading settings
+MAX_SLIPPAGE=2.5
+GAS_LIMIT=300000
+MIN_LIQUIDITY=10
 ```
 
-3. Configure:
-```bash
-cp .env.example .env
-# Edit .env with your settings
+2. Enable security features:
+```env
+# Security settings
+MEV_PROTECTION=true
+HONEYPOT_DETECTION=true
+SLIPPAGE_PROTECTION=true
 ```
 
-## 🚀 Usage
+## 💱 Trading Process
 
-1. Start bot:
-```bash
-python bot/sniper.py
+### 1. Pair Detection
+
+The bot monitors for new pairs:
+```python
+# Example pair detection
+async def handle_new_pair(event):
+    pair = event['args']['pair']
+    token0 = event['args']['token0']
+    token1 = event['args']['token1']
+    
+    # Verify pair parameters
+    if await verify_pair(pair):
+        await analyze_token(token0)
 ```
 
-2. Monitor logs:
-```bash
-tail -f sniper_bot.log
+### 2. Pre-trade Checks
+
+Before trading:
+1. Check liquidity
+2. Verify token contract
+3. Check for honeypot
+4. Calculate price impact
+
+### 3. Trade Execution
+
+Execute trades with safety:
+```python
+# Example trade execution
+async def execute_trade(token, amount):
+    # Check security
+    if not await security_check(token):
+        return
+    
+    # Calculate parameters
+    params = await calculate_trade_params(token, amount)
+    
+    # Execute trade
+    tx_hash = await send_transaction(params)
+    
+    # Monitor trade
+    await monitor_trade(tx_hash)
 ```
 
-## ⚙️ Configuration
+## 🔒 Security Features
 
-Key settings in `.env`:
-- `RPC_URL`: Your RPC endpoint
-- `PRIVATE_KEY`: Wallet private key
-- `ROUTER_ADDRESS`: DEX router address
-- `FACTORY_ADDRESS`: DEX factory address
-- `PROFIT_TARGET`: Take-profit percentage
-- `STOP_LOSS`: Stop-loss percentage
-- `MIN_LIQUIDITY`: Minimum liquidity
-- `CHECK_HONEYPOT`: Enable honeypot detection
-- `AUTO_SELL`: Enable auto-sell
+### 1. MEV Protection
 
-## 🔧 Troubleshooting
+- Private transactions
+- Gas optimization
+- Slippage protection
+- Front-running prevention
 
-Common issues:
-1. RPC Connection Errors
-   - Check RPC endpoint
-   - Verify network connectivity
-   - Try alternative providers
+### 2. Price Protection
 
-2. Transaction Failures
-   - Check wallet balance
-   - Verify gas settings
-   - Adjust slippage
+- Price impact checks
+- Liquidity verification
+- Contract validation
+- Honeypot detection
 
-3. Contract Errors
-   - Verify deployment
-   - Check addresses
-   - Validate network
+## 📈 Advanced Features
 
-## 💬 Support
+### 1. Custom Strategies
 
-- [Discord](https://discord.gg/bZXer5ZttK) - Community support
-- GitHub Issues - Bug reports
-- [API Reference](docs/api.md) - Detailed docs
+Create custom trading strategies:
+```python
+class CustomStrategy(Strategy):
+    async def analyze(self, token):
+        # Custom analysis logic
+        score = await self.calculate_score(token)
+        return score > self.threshold
+    
+    async def execute(self, token):
+        # Custom execution logic
+        await self.place_order(token)
+```
 
-## ✅ Best Practices
+### 2. Multi-DEX Support
 
-1. Start with small amounts
-2. Monitor transactions
-3. Update dependencies
-4. Use dedicated wallets
-5. Regular backups 
+Trade across multiple DEXes:
+```python
+# Example multi-DEX configuration
+dexes = {
+    'uniswap': {
+        'router': '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
+        'factory': '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f'
+    },
+    'pancakeswap': {
+        'router': '0x10ED43C718714eb63d5aA57B78B54704E256024E',
+        'factory': '0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73'
+    }
+}
+```
+
+## 📊 Performance Optimization
+
+### 1. Gas Optimization
+
+- Dynamic gas pricing
+- Gas price monitoring
+- Transaction bundling
+- MEV protection
+
+### 2. Speed Optimization
+
+- RPC optimization
+- Caching
+- Parallel processing
+- Connection management
+
+## 🎯 Common Scenarios
+
+### 1. New Pair Detection
+
+```bash
+# Monitor new pairs
+python -m bot.main --monitor-pairs
+
+# Set filters
+python -m bot.main --min-liquidity 10 --max-slippage 2.5
+```
+
+### 2. Quick Trade
+
+```bash
+# Execute quick trade
+python -m bot.main --trade 0x123... --amount 1.5 --slippage 2.5
+```
+
+## 📝 Best Practices
+
+### 1. Risk Management
+
+- Start with small amounts
+- Use stop-loss
+- Monitor positions
+- Diversify strategies
+
+### 2. Performance
+
+- Optimize gas usage
+- Monitor network
+- Use reliable RPC
+- Keep system updated
+
+### 3. Security
+
+- Enable all protections
+- Monitor transactions
+- Verify contracts
+- Use secure connections
+
+## 🚨 Troubleshooting
+
+### 1. Connection Issues
+
+- Check RPC URL
+- Verify network
+- Monitor latency
+- Use backup nodes
+
+### 2. Trading Issues
+
+- Check gas prices
+- Verify slippage
+- Monitor liquidity
+- Check approvals
+
+### 3. Performance Issues
+
+- Optimize settings
+- Monitor resources
+- Check network
+- Update software
+
+## 📚 Additional Resources
+
+- [Discord Community](https://discord.gg/bZXer5ZttK) - Join our community for support and discussions
+- [GitHub Repository](https://github.com/yourusername/crypto-sniping-bot) - View source code and contribute
+- [Documentation](https://github.com/yourusername/crypto-sniping-bot/tree/main/docs) - Browse the full documentation
+
+## 🎓 Next Steps
+
+1. Read [API Documentation](api.md)
+2. Explore [Security Features](security.md)
+3. Start with small trades 

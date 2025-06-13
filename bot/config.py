@@ -11,7 +11,7 @@ from eth_typing import Address
 from eth_utils import to_checksum_address
 import json
 from pathlib import Path
-from typing import Dict, Any
+from typing import Dict, Any, Optional, List, Union
 
 logger = logging.getLogger(__name__)
 
