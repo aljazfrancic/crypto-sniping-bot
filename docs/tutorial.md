@@ -244,15 +244,10 @@ Set `CHAIN_ID` in `.env` to switch networks.
 
 ## Next Steps
 
-1. Explore advanced features:
-   - Custom trading strategies
-   - Multi-token support
-   - Advanced monitoring
-
-2. Join the community:
-   - Discord server
-   - GitHub discussions
-   - Telegram group
+- Explore advanced features
+- Customize trading strategies
+- Set up monitoring tools
+- Join the community on [Discord](https://discord.gg/bZXer5ZttK)
 
 3. Contribute:
    - Report bugs
