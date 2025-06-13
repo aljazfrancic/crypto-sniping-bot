@@ -10,17 +10,37 @@ from web3 import Web3
 from web3.contract import Contract
 from eth_account import Account
 import logging
+from web3.exceptions import ContractLogicError, TransactionNotFound
+from .config import Config
 
 logger = logging.getLogger(__name__)
 
+class BlockchainError(Exception):
+    """Blockchain operation error."""
+    pass
 
 class BlockchainInterface:
     """Handles all blockchain interactions"""
 
-    def __init__(self, w3: Web3, config):
-        self.w3 = w3
+    def __init__(self, config: Config):
+        """Initialize blockchain interface.
+        
+        Args:
+            config: Configuration
+        """
         self.config = config
-        self.account = Account.from_key(config.PRIVATE_KEY)
+        self.w3 = Web3(Web3.HTTPProvider(config.rpc_url))
+        
+        if not self.w3.is_connected():
+            raise BlockchainError("Failed to connect to RPC")
+            
+        # Initialize account
+        self.account = Account.from_key(config.private_key)
+        
+        # Verify chain ID
+        if self.w3.eth.chain_id != config.chain_id:
+            raise BlockchainError(f"Chain ID mismatch: {self.w3.eth.chain_id} != {config.chain_id}")
+            
         self.sniper_contract = self._load_sniper_contract()
         self._abi_cache = {}
         self.router_address = None  # Initialize with None or appropriate default
@@ -294,3 +314,112 @@ class BlockchainInterface:
         except Exception as e:
             logger.error(f"Error sending transaction: {e}")
             return None
+
+    def get_balance(self) -> float:
+        """Get ETH balance.
+        
+        Returns:
+            Balance in ETH
+        """
+        try:
+            balance = self.w3.eth.get_balance(self.account.address)
+            return self.w3.from_wei(balance, 'ether')
+        except Exception as e:
+            raise BlockchainError(f"Failed to get balance: {str(e)}")
+            
+    def get_gas_price(self) -> int:
+        """Get current gas price.
+        
+        Returns:
+            Gas price in wei
+        """
+        try:
+            return self.w3.eth.gas_price
+        except Exception as e:
+            raise BlockchainError(f"Failed to get gas price: {str(e)}")
+            
+    def estimate_gas(self, transaction: Dict[str, Any]) -> int:
+        """Estimate gas for transaction.
+        
+        Args:
+            transaction: Transaction parameters
+            
+        Returns:
+            Estimated gas limit
+        """
+        try:
+            return self.w3.eth.estimate_gas(transaction)
+        except Exception as e:
+            logger.warning(f"Gas estimation failed: {e}")
+            return 300000  # Fallback gas limit
+            
+    def get_transaction_receipt(self, tx_hash: str) -> Dict[str, Any]:
+        """Get transaction receipt.
+        
+        Args:
+            tx_hash: Transaction hash
+            
+        Returns:
+            Transaction receipt
+        """
+        try:
+            return self.w3.eth.get_transaction_receipt(tx_hash)
+        except TransactionNotFound:
+            raise BlockchainError("Transaction not found")
+        except Exception as e:
+            raise BlockchainError(f"Failed to get receipt: {str(e)}")
+            
+    def wait_for_transaction(self, tx_hash: str, timeout: int = 300) -> Dict[str, Any]:
+        """Wait for transaction confirmation.
+        
+        Args:
+            tx_hash: Transaction hash
+            timeout: Timeout in seconds
+            
+        Returns:
+            Transaction receipt
+        """
+        try:
+            return self.w3.eth.wait_for_transaction_receipt(tx_hash, timeout=timeout)
+        except Exception as e:
+            raise BlockchainError(f"Failed to wait for transaction: {str(e)}")
+            
+    def get_contract(self, address: str, abi: list) -> Any:
+        """Get contract instance.
+        
+        Args:
+            address: Contract address
+            abi: Contract ABI
+            
+        Returns:
+            Contract instance
+        """
+        try:
+            return self.w3.eth.contract(
+                address=self.w3.to_checksum_address(address),
+                abi=abi
+            )
+        except Exception as e:
+            raise BlockchainError(f"Failed to get contract: {str(e)}")
+            
+    def get_block_number(self) -> int:
+        """Get current block number.
+        
+        Returns:
+            Block number
+        """
+        try:
+            return self.w3.eth.block_number
+        except Exception as e:
+            raise BlockchainError(f"Failed to get block number: {str(e)}")
+            
+    def get_block_timestamp(self) -> int:
+        """Get current block timestamp.
+        
+        Returns:
+            Block timestamp
+        """
+        try:
+            return self.w3.eth.get_block('latest')['timestamp']
+        except Exception as e:
+            raise BlockchainError(f"Failed to get block timestamp: {str(e)}")

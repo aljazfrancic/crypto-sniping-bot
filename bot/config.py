@@ -7,136 +7,158 @@ import os
 import logging
 from dotenv import load_dotenv
 from web3 import Web3
+from eth_typing import Address
+from eth_utils import to_checksum_address
+import json
+from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
 # Load environment variables
 load_dotenv()
 
+class ConfigError(Exception):
+    """Configuration validation error."""
+    pass
 
 class Config:
-    """Configuration class with validation"""
-
-    def __init__(self):
-        # Network settings
-        self.RPC_URL = self._get_required("RPC_URL")
-        self.CHAIN_ID = int(self._get_required("CHAIN_ID"))
-
-        # Contract addresses
-        self.ROUTER_ADDRESS = self._get_required("ROUTER_ADDRESS")
-        self.FACTORY_ADDRESS = self._get_required("FACTORY_ADDRESS")
-        self.WETH_ADDRESS = self._get_required("WETH_ADDRESS")
-        self.SNIPER_CONTRACT = os.getenv("SNIPER_CONTRACT", "")
-
-        # Wallet settings
-        self.PRIVATE_KEY = self._get_required("PRIVATE_KEY")
-
-        # Validate private key
-        if not self._is_valid_private_key(self.PRIVATE_KEY):
-            raise ValueError("Invalid private key format")
-
-        # Trading settings
-        self.BUY_AMOUNT = float(os.getenv("BUY_AMOUNT", "0.1"))
-        self.SLIPPAGE = float(os.getenv("SLIPPAGE", "5"))
-        self.GAS_PRICE_MULTIPLIER = float(os.getenv("GAS_PRICE_MULTIPLIER", "1.5"))
-
-        # Sell settings
-        self.PROFIT_TARGET = float(os.getenv("PROFIT_TARGET", "50"))
-        self.STOP_LOSS = float(os.getenv("STOP_LOSS", "10"))
-        self.AUTO_SELL = os.getenv("AUTO_SELL", "true").lower() == "true"
-
-        # Safety settings
-        self.MIN_LIQUIDITY = float(os.getenv("MIN_LIQUIDITY", "5"))
-        self.CHECK_HONEYPOT = os.getenv("CHECK_HONEYPOT", "true").lower() == "true"
-        self.USE_HONEYPOT_API = os.getenv("USE_HONEYPOT_API", "true").lower() == "true"
-
-        # Advanced settings
-        self.WAIT_FOR_CONFIRMATION = (
-            os.getenv("WAIT_FOR_CONFIRMATION", "false").lower() == "true"
-        )
-        self.MAX_POSITIONS = int(os.getenv("MAX_POSITIONS", "10"))
-        self.POSITION_SIZE_PERCENTAGE = float(
-            os.getenv("POSITION_SIZE_PERCENTAGE", "100")
-        )
-
-        # Validate configuration
+    """Secure configuration management with validation."""
+    
+    def __init__(self, env_file: str = ".env"):
+        """Initialize configuration with validation.
+        
+        Args:
+            env_file: Path to environment file
+        """
+        self._load_env(env_file)
         self._validate_config()
-
-        # Log configuration (without sensitive data)
-        self._log_config()
-
-    def _get_required(self, key: str) -> str:
-        """Get required environment variable"""
-        value = os.getenv(key)
-        if not value:
-            raise ValueError(f"Required environment variable {key} not set")
-        return value
-
-    def _is_valid_private_key(self, key: str) -> bool:
-        """Validate private key format"""
-        try:
-            # Remove 0x prefix if present
-            if key.startswith("0x"):
-                key = key[2:]
-
-            # Check if it's 64 hex characters
-            if len(key) != 64:
-                return False
-
-            # Try to convert to int to verify it's hex
-            int(key, 16)
-            return True
-
-        except Exception:
-            return False
-
-    def _validate_config(self):
-        """Validate configuration values"""
-        # Validate addresses
-        required_addresses = [
-            ("ROUTER_ADDRESS", self.ROUTER_ADDRESS),
-            ("FACTORY_ADDRESS", self.FACTORY_ADDRESS),
-            ("WETH_ADDRESS", self.WETH_ADDRESS),
+        
+    def _load_env(self, env_file: str) -> None:
+        """Load environment variables from file."""
+        if not os.path.exists(env_file):
+            raise ConfigError(f"Environment file not found: {env_file}")
+            
+        with open(env_file) as f:
+            for line in f:
+                if line.strip() and not line.startswith('#'):
+                    key, value = line.strip().split('=', 1)
+                    os.environ[key] = value
+                    
+    def _validate_config(self) -> None:
+        """Validate all required configuration values."""
+        required_vars = [
+            'RPC_URL',
+            'PRIVATE_KEY',
+            'ROUTER_ADDRESS',
+            'FACTORY_ADDRESS',
+            'WETH_ADDRESS'
         ]
-
-        for name, address in required_addresses:
-            if not Web3.is_address(address):
-                raise ValueError(f"Invalid {name}: {address}")
-
-        # Validate numeric ranges
-        if self.BUY_AMOUNT <= 0:
-            raise ValueError("BUY_AMOUNT must be greater than 0")
-
-        if not 0 < self.SLIPPAGE <= 100:
-            raise ValueError("SLIPPAGE must be between 0 and 100")
-
-        if self.GAS_PRICE_MULTIPLIER < 1:
-            raise ValueError("GAS_PRICE_MULTIPLIER must be at least 1")
-
-        if self.PROFIT_TARGET <= 0:
-            raise ValueError("PROFIT_TARGET must be greater than 0")
-
-        if self.STOP_LOSS < 0 or self.STOP_LOSS >= 100:
-            raise ValueError("STOP_LOSS must be between 0 and 100")
-
-        if self.MIN_LIQUIDITY < 0:
-            raise ValueError("MIN_LIQUIDITY must be non-negative")
-
-    def _log_config(self):
-        """Log configuration (excluding sensitive data)"""
-        logger.info("Configuration loaded:")
-        logger.info(f"  Chain ID: {self.CHAIN_ID}")
-        logger.info(f"  RPC URL: {self.RPC_URL[:30]}...")
-        logger.info(f"  Router: {self.ROUTER_ADDRESS}")
-        logger.info(f"  Factory: {self.FACTORY_ADDRESS}")
-        logger.info(f"  WETH: {self.WETH_ADDRESS}")
-        logger.info(f"  Sniper Contract: {self.SNIPER_CONTRACT or 'Not deployed'}")
-        logger.info(f"  Buy Amount: {self.BUY_AMOUNT} ETH")
-        logger.info(f"  Slippage: {self.SLIPPAGE}%")
-        logger.info(f"  Profit Target: {self.PROFIT_TARGET}%")
-        logger.info(f"  Stop Loss: {self.STOP_LOSS}%")
-        logger.info(f"  Min Liquidity: {self.MIN_LIQUIDITY} ETH")
-        logger.info(f"  Honeypot Check: {self.CHECK_HONEYPOT}")
+        
+        for var in required_vars:
+            if not os.getenv(var):
+                raise ConfigError(f"Missing required environment variable: {var}")
+                
+        # Validate RPC URL
+        rpc_url = os.getenv('RPC_URL', '')
+        if not rpc_url.startswith(('http://', 'https://', 'ws://', 'wss://')):
+            raise ConfigError("RPC_URL must be a valid HTTP/WebSocket URL")
+            
+        # Validate addresses
+        try:
+            self.router_address = to_checksum_address(os.getenv('ROUTER_ADDRESS', ''))
+            self.factory_address = to_checksum_address(os.getenv('FACTORY_ADDRESS', ''))
+            self.weth_address = to_checksum_address(os.getenv('WETH_ADDRESS', ''))
+        except ValueError as e:
+            raise ConfigError(f"Invalid Ethereum address: {e}")
+            
+        # Validate private key
+        private_key = os.getenv('PRIVATE_KEY', '')
+        if not private_key.startswith('0x'):
+            private_key = '0x' + private_key
+        try:
+            if len(bytes.fromhex(private_key[2:])) != 32:
+                raise ValueError("Invalid private key length")
+        except ValueError as e:
+            raise ConfigError(f"Invalid private key: {e}")
+            
+        # Load ABIs
+        self._load_abis()
+        
+    def _load_abis(self) -> None:
+        """Load contract ABIs from files."""
+        abi_dir = Path(__file__).parent.parent / 'abis'
+        if not abi_dir.exists():
+            raise ConfigError("ABI directory not found")
+            
+        self.abis = {}
+        for abi_file in abi_dir.glob('*.json'):
+            try:
+                with open(abi_file) as f:
+                    self.abis[abi_file.stem] = json.load(f)
+            except json.JSONDecodeError as e:
+                raise ConfigError(f"Invalid ABI file {abi_file}: {e}")
+                
+    @property
+    def rpc_url(self) -> str:
+        """Get RPC URL."""
+        return os.getenv('RPC_URL', '')
+        
+    @property
+    def private_key(self) -> str:
+        """Get private key."""
+        key = os.getenv('PRIVATE_KEY', '')
+        return key if key.startswith('0x') else '0x' + key
+        
+    @property
+    def chain_id(self) -> int:
+        """Get chain ID."""
+        return int(os.getenv('CHAIN_ID', '1'))
+        
+    @property
+    def buy_amount(self) -> float:
+        """Get buy amount in ETH."""
+        return float(os.getenv('BUY_AMOUNT', '0.1'))
+        
+    @property
+    def slippage(self) -> float:
+        """Get maximum slippage percentage."""
+        return float(os.getenv('SLIPPAGE', '5.0'))
+        
+    @property
+    def profit_target(self) -> float:
+        """Get take profit percentage."""
+        return float(os.getenv('PROFIT_TARGET', '50.0'))
+        
+    @property
+    def stop_loss(self) -> float:
+        """Get stop loss percentage."""
+        return float(os.getenv('STOP_LOSS', '10.0'))
+        
+    @property
+    def min_liquidity(self) -> float:
+        """Get minimum pool liquidity in ETH."""
+        return float(os.getenv('MIN_LIQUIDITY', '5.0'))
+        
+    @property
+    def check_honeypot(self) -> bool:
+        """Get honeypot detection setting."""
+        return os.getenv('CHECK_HONEYPOT', 'true').lower() == 'true'
+        
+    @property
+    def auto_sell(self) -> bool:
+        """Get auto-sell setting."""
+        return os.getenv('AUTO_SELL', 'true').lower() == 'true'
+        
+    @property
+    def gas_price_multiplier(self) -> float:
+        """Get gas price multiplier."""
+        return float(os.getenv('GAS_PRICE_MULTIPLIER', '1.1'))
+        
+    def get_abi(self, contract_name: str) -> Dict[str, Any]:
+        """Get contract ABI by name."""
+        if contract_name not in self.abis:
+            raise ConfigError(f"ABI not found for contract: {contract_name}")
+        return self.abis[contract_name]
 
     def get_network_name(self) -> str:
         """Get human-readable network name"""
@@ -151,4 +173,4 @@ class Config:
             43113: "Avalanche Testnet",
             31337: "Local Network",
         }
-        return networks.get(self.CHAIN_ID, f"Unknown ({self.CHAIN_ID})")
+        return networks.get(self.chain_id, f"Unknown ({self.chain_id})")
