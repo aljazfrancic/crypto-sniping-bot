@@ -1,14 +1,14 @@
-# Crypto Sniping Bot
+# 🪙️🔫🤖 Crypto Sniping Bot
 
 A high-performance bot for sniping newly created liquidity pools on DEXes.
 
-## Quick Links
+## 📚 Quick Links
 - [Tutorial](docs/tutorial.md) - Get started
 - [API Reference](docs/api.md) - API docs
 - [Architecture](docs/architecture.md) - System design
 - [Discord](https://discord.gg/bZXer5ZttK) - Community
 
-## Features
+## 🚀 Features
 - Real-time pool monitoring
 - Instant token buying
 - Honeypot detection
@@ -17,7 +17,7 @@ A high-performance bot for sniping newly created liquidity pools on DEXes.
 - Logging & monitoring
 - Backup system
 
-## Quick Start
+## ⚡ Quick Start
 
 1. Install dependencies:
 ```bash
@@ -41,7 +41,7 @@ cp .env.example .env
 python bot/sniper.py
 ```
 
-## Testing
+## 🧪 Testing
 ```bash
 # Python tests
 pytest tests/
@@ -50,7 +50,7 @@ pytest tests/
 npx hardhat test
 ```
 
-## Project Structure
+## 📁 Project Structure
 ```
 .
 ├── bot/              # Python bot
@@ -60,13 +60,13 @@ npx hardhat test
 └── docs/          # Documentation
 ```
 
-## Community
+## 👥 Community
 - [Discord](https://discord.gg/bZXer5ZttK) - Support & updates
 - GitHub Issues - Bug reports
 - Pull Requests - Contributions
 
-## License
+## 📄 License
 MIT License - see [LICENSE](LICENSE)
 
-## Disclaimer
+## ⚠️ Disclaimer
 For educational purposes only. Use at your own risk.

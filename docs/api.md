@@ -1,8 +1,8 @@
-# API Reference
+# 📚 API Reference
 
-## Core Components
+## 🧩 Core Components
 
-### Blockchain Interface
+### 🔗 Blockchain Interface
 ```python
 from bot.blockchain import BlockchainInterface
 
@@ -17,7 +17,7 @@ balance = blockchain.get_balance(token_address)
 gas_price = blockchain.get_gas_price()
 ```
 
-### Trading Engine
+### 💱 Trading Engine
 ```python
 from bot.trading import TradingEngine
 
@@ -32,7 +32,7 @@ tx_hash = trading.buy_token(token_address, amount_eth, slippage)
 position = trading.get_position(token_address)
 ```
 
-### Honeypot Detection
+### 🍯 Honeypot Detection
 ```python
 from bot.honeypot import HoneypotDetector
 
@@ -44,7 +44,7 @@ is_safe = detector.analyze_token(token_address)
 liquidity = detector.verify_liquidity(token_address)
 ```
 
-### Configuration
+### ⚙️ Configuration
 ```python
 from bot.config import Config
 
@@ -60,7 +60,7 @@ auto_sell = config.auto_sell
 gas_price_multiplier = config.gas_price_multiplier
 ```
 
-### Monitoring
+### 📊 Monitoring
 ```python
 from bot.monitoring import Monitoring
 
@@ -73,7 +73,7 @@ monitoring.log_error("Error message")
 monitoring.update_position(token_address, amount, price)
 ```
 
-## Configuration Reference
+## 📋 Configuration Reference
 
 | Setting | Description | Default | Required |
 |---------|-------------|---------|----------|
@@ -88,7 +88,7 @@ monitoring.update_position(token_address, amount, price)
 | `AUTO_SELL` | Auto-sell | true | No |
 | `GAS_PRICE_MULTIPLIER` | Gas multiplier | 1.1 | No |
 
-## Support
+## 💬 Support
 
 - [Discord](https://discord.gg/bZXer5ZttK) - Community support
 - GitHub Issues - Bug reports

@@ -1,6 +1,6 @@
-# Tutorial
+# 📖 Tutorial
 
-## Setup
+## 🛠️ Setup
 
 1. Install dependencies:
 ```bash
@@ -23,7 +23,7 @@ cp .env.example .env
 # Edit .env with your settings
 ```
 
-## Usage
+## 🚀 Usage
 
 1. Start bot:
 ```bash
@@ -35,7 +35,7 @@ python bot/sniper.py
 tail -f sniper_bot.log
 ```
 
-## Configuration
+## ⚙️ Configuration
 
 Key settings in `.env`:
 - `RPC_URL`: Your RPC endpoint
@@ -48,7 +48,7 @@ Key settings in `.env`:
 - `CHECK_HONEYPOT`: Enable honeypot detection
 - `AUTO_SELL`: Enable auto-sell
 
-## Troubleshooting
+## 🔧 Troubleshooting
 
 Common issues:
 1. RPC Connection Errors
@@ -66,13 +66,13 @@ Common issues:
    - Check addresses
    - Validate network
 
-## Support
+## 💬 Support
 
 - [Discord](https://discord.gg/bZXer5ZttK) - Community support
 - GitHub Issues - Bug reports
 - [API Reference](docs/api.md) - Detailed docs
 
-## Best Practices
+## ✅ Best Practices
 
 1. Start with small amounts
 2. Monitor transactions
