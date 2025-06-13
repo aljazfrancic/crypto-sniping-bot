@@ -89,40 +89,23 @@ contract Sniper is Ownable, ReentrancyGuard {
         emit TokenBought(token, msg.value, amounts[1], block.timestamp);
     }
     
-    function sellToken(
-        address token,
-        uint256 amountIn,
-        uint256 minAmountOut
-    ) external onlyOwner nonReentrant {
-        require(amountIn > 0, "Amount must be greater than 0");
-        require(tokenBalances[token] >= amountIn, "Insufficient token balance");
-        
-        IERC20(token).approve(address(router), amountIn);
-        
+    function sellToken(address token, uint256 amount) external onlyOwner {
+        require(amount > 0, "Amount must be greater than 0");
+        require(IERC20(token).balanceOf(address(this)) >= amount, "Insufficient token balance");
+
+        IERC20(token).approve(address(router), amount);
+
         address[] memory path = new address[](2);
         path[0] = token;
         path[1] = WETH;
-        
-        // Calculate minimum output considering slippage
-        uint256[] memory amountsOut = router.getAmountsOut(amountIn, path);
-        uint256 amountOutMin = minAmountOut > 0 ? minAmountOut : (amountsOut[1] * (10000 - maxSlippage)) / 10000;
-        
-        uint256 balanceBefore = address(this).balance;
-        
-        uint256[] memory amounts = router.swapExactTokensForETH(
-            amountIn,
-            amountOutMin,
+
+        router.swapExactTokensForETH(
+            amount,
+            0, // Accept any amount of ETH
             path,
             address(this),
             block.timestamp + deadline
         );
-        
-        uint256 balanceAfter = address(this).balance;
-        uint256 actualReceived = balanceAfter - balanceBefore;
-        
-        tokenBalances[token] -= amountIn;
-        
-        emit TokenSold(token, amountIn, actualReceived, block.timestamp);
     }
     
     function updateSlippage(uint256 _maxSlippage) external onlyOwner {
