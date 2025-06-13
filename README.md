@@ -4,10 +4,25 @@ A secure and efficient bot for sniping newly created liquidity pairs on decentra
 
 ## 📚 Quick Links
 
-- [Security Guide](docs/security.md)
-- [Configuration Guide](docs/configuration.md)
-- [API Documentation](docs/api.md)
-- [Contributing Guide](docs/contributing.md)
+### Getting Started
+- [Installation Guide](docs/installation.md) - Setup instructions
+- [Configuration Guide](docs/configuration.md) - Bot configuration
+- [Tutorial](docs/tutorial.md) - Step-by-step guide
+
+### Core Features
+- [Security Guide](docs/security.md) - Security features
+- [Trading Guide](docs/trading.md) - Trading features
+- [DEX Integration](docs/dex.md) - DEX support
+
+### Development
+- [API Documentation](docs/api.md) - API reference
+- [Architecture](docs/architecture.md) - System design
+- [Contributing Guide](docs/contributing.md) - How to contribute
+
+### Additional Resources
+- [Troubleshooting](docs/troubleshooting.md) - Common issues
+- [FAQ](docs/faq.md) - Frequently asked questions
+- [Changelog](docs/changelog.md) - Version history
 
 ## 🚀 Features
 
