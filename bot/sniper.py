@@ -15,7 +15,7 @@ from web3.middleware import geth_poa_middleware  # web3.py 6.x compatible import
 from bot.config import Config
 from bot.blockchain import BlockchainInterface
 from bot.trading import TradingEngine
-from bot.honeypot import HoneypotChecker
+from bot.honeypot import HoneypotDetector
 
 # Configure logging
 logging.basicConfig(
@@ -35,7 +35,7 @@ class SniperBot:
         self.w3 = self._setup_web3()
         self.blockchain = BlockchainInterface(self.w3, config)
         self.trading = TradingEngine(self.blockchain, config)
-        self.honeypot_checker = HoneypotChecker(self.w3, config)
+        self.honeypot_detector = HoneypotDetector(self.w3, config)
         self.positions = {}
         self.monitored_pairs = set()
         self.router_address = None  # Initialize with None or appropriate default
@@ -154,7 +154,7 @@ class SniperBot:
         try:
             # Check if honeypot detection is enabled
             if self.config.CHECK_HONEYPOT:
-                is_honeypot = await self.honeypot_checker.check(token_address)
+                is_honeypot = await self.honeypot_detector.check(token_address)
                 if is_honeypot:
                     logger.warning(f"Token {token_address} detected as honeypot")
                     return False

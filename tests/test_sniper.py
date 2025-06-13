@@ -11,6 +11,7 @@ import signal
 import aiohttp
 from unittest.mock import Mock, AsyncMock, patch
 from web3 import Web3
+from eth_typing import Address
 
 import bot.config as config_module
 import bot.blockchain as blockchain_module
@@ -20,7 +21,7 @@ from bot.sniper import SniperBot
 from bot.config import Config
 from bot.blockchain import BlockchainInterface
 from bot.trading import TradingEngine
-from bot.honeypot import HoneypotChecker
+from bot.honeypot import HoneypotDetector
 
 # Set up module aliases
 sys.modules.setdefault("config", config_module)
@@ -162,16 +163,16 @@ class TestTradingEngine:
         assert tx_hash == "0xtxhash"
 
 
-class TestHoneypotChecker:
+class TestHoneypotDetector:
     @pytest.mark.asyncio
     async def test_check_contract_code(self, mock_w3, mock_config):
         """Test contract code checking"""
-        checker = HoneypotChecker(mock_w3, mock_config)
+        detector = HoneypotDetector(mock_w3, mock_config)
 
         # Mock contract code
         mock_w3.eth.get_code = Mock(return_value=b"0x606060")
 
-        result = await checker._check_contract_code(
+        result = await detector._check_contract_code(
             "0x1111111111111111111111111111111111111111"
         )
         assert isinstance(result, bool)
@@ -179,7 +180,7 @@ class TestHoneypotChecker:
     @pytest.mark.asyncio
     async def test_check_token_functions(self, mock_w3, mock_config):
         """Test token function checking"""
-        checker = HoneypotChecker(mock_w3, mock_config)
+        detector = HoneypotDetector(mock_w3, mock_config)
 
         # Mock token contract
         mock_token = Mock()
@@ -190,7 +191,7 @@ class TestHoneypotChecker:
 
         mock_w3.eth.contract.return_value = mock_token
 
-        result = await checker._check_token_functions(
+        result = await detector._check_token_functions(
             "0x1111111111111111111111111111111111111111"
         )
         assert not result  # Should pass all checks
@@ -198,34 +199,34 @@ class TestHoneypotChecker:
     @pytest.mark.asyncio
     async def test_honeypot_cache(self, mock_w3, mock_config):
         """Test honeypot result caching"""
-        checker = HoneypotChecker(mock_w3, mock_config)
+        detector = HoneypotDetector(mock_w3, mock_config)
 
         # Mock successful checks
-        checker._check_contract_code = AsyncMock(return_value=False)
-        checker._check_honeypot_api = AsyncMock(return_value=False)
-        checker._check_token_functions = AsyncMock(return_value=False)
+        detector._check_contract_code = AsyncMock(return_value=False)
+        detector._check_honeypot_api = AsyncMock(return_value=False)
+        detector._check_token_functions = AsyncMock(return_value=False)
 
         # First check
-        result1 = await checker.check(
+        result1 = await detector.check(
             "0x1111111111111111111111111111111111111111"
         )
         assert not result1
 
         # Second check should use cache
-        result2 = await checker.check(
+        result2 = await detector.check(
             "0x1111111111111111111111111111111111111111"
         )
         assert not result2
 
         # Check that methods were only called once
-        checker._check_contract_code.assert_called_once()
-        checker._check_honeypot_api.assert_called_once()
-        checker._check_token_functions.assert_called_once()
+        detector._check_contract_code.assert_called_once()
+        detector._check_honeypot_api.assert_called_once()
+        detector._check_token_functions.assert_called_once()
 
     @pytest.mark.asyncio
     async def test_check_honeypot_api(self, mock_w3, mock_config, monkeypatch):
         """Test honeypot API checking"""
-        checker = HoneypotChecker(mock_w3, mock_config)
+        detector = HoneypotDetector(mock_w3, mock_config)
 
         class Resp:
             status = 200
@@ -251,7 +252,7 @@ class TestHoneypotChecker:
 
         monkeypatch.setattr(aiohttp, "ClientSession", Session)
 
-        result = await checker._check_honeypot_api(
+        result = await detector._check_honeypot_api(
             "0x1111111111111111111111111111111111111111"
         )
         assert result is False
@@ -408,8 +409,8 @@ class TestSniperBotMinimal:
         bot.w3.eth.get_code = Mock(return_value=b"abc")
         bot.blockchain = Mock()
         bot.blockchain.get_pair_liquidity = AsyncMock(return_value=10)
-        bot.honeypot_checker = AsyncMock()
-        bot.honeypot_checker.check.return_value = False
+        bot.honeypot_detector = AsyncMock()
+        bot.honeypot_detector.check.return_value = False
         result = await SniperBot._is_token_safe(
             bot,
             "0x1111111111111111111111111111111111111111",
