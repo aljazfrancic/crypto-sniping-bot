@@ -189,3 +189,9 @@ MIT License - see LICENSE file for details
 ## ⚠️ Disclaimer
 
 This software is for educational purposes only. Use at your own risk. The authors are not responsible for any financial losses incurred through the use of this software.
+
+## Community
+
+- [Discord Server](https://discord.gg/bZXer5ZttK) - Join our community for support and updates
+- GitHub Issues - Report bugs and request features
+- Pull Requests - Contribute to the project

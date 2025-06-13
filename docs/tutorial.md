@@ -214,6 +214,12 @@ Set `CHAIN_ID` in `.env` to switch networks.
    monitor.restore_from_backup("backups/backup_20240101_120000")
    ```
 
+### Getting Help
+
+- Join our [Discord Server](https://discord.gg/bZXer5ZttK) for community support
+- Check GitHub Issues for known problems
+- Review the [API Reference](docs/api.md) for detailed information
+
 ## Best Practices
 
 1. **Start Small**

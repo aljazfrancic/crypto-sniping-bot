@@ -285,11 +285,18 @@ except Exception as e:
 | `SLIPPAGE` | Maximum slippage percentage | 5 | No |
 | `PROFIT_TARGET` | Take profit percentage | 50 | No |
 | `STOP_LOSS` | Stop loss percentage | 10 | No |
-| `MIN_LIQUIDITY` | Minimum pool liquidity in ETH | 5 | No |
+| `MIN_LIQUIDITY` | Minimum pool liquidity | 5 | No |
 | `CHECK_HONEYPOT` | Enable honeypot detection | true | No |
 | `AUTO_SELL` | Enable automatic selling | true | No |
 | `GAS_PRICE_MULTIPLIER` | Gas price multiplier | 1.2 | No |
 | `ROUTER_ADDRESS` | DEX router address | - | Yes |
 | `FACTORY_ADDRESS` | DEX factory address | - | Yes |
 | `WETH_ADDRESS` | Wrapped ETH address | - | Yes |
-| `SNIPER_CONTRACT` | Deployed Sniper contract | - | Yes | 
+| `SNIPER_CONTRACT` | Deployed Sniper contract | - | Yes |
+
+## Support
+
+For additional help and community support:
+- Join our [Discord Server](https://discord.gg/bZXer5ZttK)
+- Check GitHub Issues
+- Review the [Tutorial](docs/tutorial.md) 
