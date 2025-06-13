@@ -55,9 +55,9 @@ npx hardhat test
 .
 ├── bot/              # Python bot
 ├── contracts/        # Smart contracts
-├── scripts/         # Deployment
-├── tests/          # Test suite
-└── docs/          # Documentation
+├── scripts/          # Deployment
+├── tests/            # Test suite
+└── docs/             # Documentation
 ```
 
 ## 👥 Community
