@@ -16,7 +16,7 @@ requests==2.31.0
 urllib3==2.4.0
 
 # Logging and monitoring
-colorlog==6.7.0
+colorlog==6.9.0
 
 # Security and encryption
 cryptography>=41.0.0
