@@ -11,6 +11,7 @@ import sys
 from datetime import datetime
 from typing import Dict, Set, Optional
 from web3 import Web3
+
 # Handle different web3.py versions for PoA middleware
 try:
     from web3.middleware import ExtraDataToPOAMiddleware as poa_middleware
