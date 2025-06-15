@@ -23,14 +23,14 @@ This guide will walk you through setting up the Crypto Sniping Bot with all depe
 ### Option 1: Automated Setup
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/crypto-sniping-bot.git
+git clone https://github.com/aljazfrancic/crypto-sniping-bot.git
 cd crypto-sniping-bot
 
 # Run automated setup (installs everything)
-python setup_tests.py
+python tests/scripts/setup_tests.py
 
 # Verify installation
-python test_clean.py
+python run_tests.py
 ```
 
 The automated setup script will:
@@ -45,7 +45,7 @@ The automated setup script will:
 
 #### 1. Clone Repository
 ```bash
-git clone https://github.com/your-username/crypto-sniping-bot.git
+git clone https://github.com/aljazfrancic/crypto-sniping-bot.git
 cd crypto-sniping-bot
 ```
 
@@ -145,7 +145,7 @@ npx hardhat run scripts/deploy.js --network sepolia
 # Run all 72 tests
 python run_tests.py
 
-# Run with coverage report (34% coverage)
+# Run with coverage report (48% coverage)
 python run_tests.py --coverage
 
 # Run specific test categories
@@ -205,10 +205,10 @@ The bot includes 72 comprehensive tests organized by category:
 
 ```
 tests/
-├── unit/              # Unit tests (34 tests)
+├── unit/              # Unit tests (33 tests)
 │   ├── test_exceptions.py
 │   └── test_security.py  
-├── integration/       # Integration tests (35 tests)
+├── integration/       # Integration tests (39 tests)
 │   ├── test_sniper.py
 │   ├── test_clean.py
 │   └── test_improvements.py
@@ -227,7 +227,7 @@ tests/
 # Run all 72 tests
 python run_tests.py
 
-# With coverage report (34% coverage)
+# With coverage report (48% coverage)
 python run_tests.py --coverage
 ```
 

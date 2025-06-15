@@ -6,7 +6,7 @@ A production-ready, professional-grade cryptocurrency sniping bot built with Pyt
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](../LICENSE)
 ![Tests](https://img.shields.io/badge/Tests-Passing-brightgreen)
 ![Security](https://img.shields.io/badge/Security-Hardened-red)
-![Coverage](https://img.shields.io/badge/Coverage-95%25-brightgreen)
+![Coverage](https://img.shields.io/badge/Coverage-48%25-yellow)
 
 ## ✨ Key Features
 
@@ -38,7 +38,7 @@ A production-ready, professional-grade cryptocurrency sniping bot built with Pyt
 - **Performance Notifications**: Threshold-based alerting
 
 ### 🧪 **Comprehensive Testing**
-- **100+ Test Cases**: Security, functionality, integration tests
+- **72 Test Cases**: Security, functionality, integration tests
 - **Continuous Integration**: Automated testing pipeline
 - **Security Test Suite**: 18 dedicated security tests
 - **Clean Test Environment**: Safe testing without real funds exposure
@@ -52,14 +52,14 @@ A production-ready, professional-grade cryptocurrency sniping bot built with Pyt
 
 ### 1. Clone Repository
 ```bash
-git clone https://github.com/your-username/crypto-sniping-bot.git
+git clone https://github.com/aljazfrancic/crypto-sniping-bot.git
 cd crypto-sniping-bot
 ```
 
 ### 2. Setup Environment
 ```bash
 # Install dependencies and configure environment
-python setup_tests.py
+python tests/scripts/setup_tests.py
 
 # Or manual setup
 pip install -r requirements.txt
@@ -84,11 +84,11 @@ findstr "CHAIN_ID" .env
 
 ### 5. Verify Setup
 ```bash
-# Run comprehensive test suite
-python run_tests.py
+# Run automated setup (installs everything)
+python tests/scripts/setup_tests.py
 
-# All 72 tests with coverage report
-python run_tests.py --coverage
+# Verify installation
+python run_tests.py
 ```
 
 ### 6. Deploy Smart Contracts (Optional)
@@ -175,15 +175,15 @@ python -m bot.sniper --strategy price-impact
 
 ## 🧪 Testing
 
-The bot includes a comprehensive testing suite with 72 tests organized in a clean structure:
+The bot includes a comprehensive testing suite with 72 tests (33 unit + 39 integration) organized in a clean structure:
 
 ### Test Structure
 ```
 tests/
-├── unit/              # Unit tests (34 tests)
+├── unit/              # Unit tests (33 tests)
 │   ├── test_exceptions.py
 │   └── test_security.py
-├── integration/       # Integration tests (35 tests)
+├── integration/       # Integration tests (39 tests)
 │   ├── test_sniper.py
 │   ├── test_clean.py
 │   └── test_improvements.py
@@ -200,7 +200,7 @@ tests/
 # Run all 72 tests
 python run_tests.py
 
-# Run with coverage (34% coverage)
+# Run with coverage (48% coverage)
 python run_tests.py --coverage
 
 # Run specific test categories

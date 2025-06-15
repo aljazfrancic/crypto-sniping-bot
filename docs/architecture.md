@@ -35,7 +35,7 @@ graph TB
         end
 
         subgraph "🧪 Testing & QA Layer"
-            TESTS["🧪 Test Suite<br/>100+ Test Cases"]
+            TESTS["🧪 Test Suite<br/>72 Test Cases"]
             SECURITY_TESTS["🔒 Security Tests<br/>18 Security Tests"]
             INTEGRATION_TESTS["🔗 Integration Tests<br/>End-to-End Testing"]
         end

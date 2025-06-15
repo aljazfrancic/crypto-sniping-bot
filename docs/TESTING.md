@@ -22,7 +22,7 @@ cp tests/config/test_safe.config.env .env
 # Run all 72 tests
 python run_tests.py
 
-# With coverage report (34% coverage)
+# With coverage report (48% coverage)
 python run_tests.py --coverage
 
 # Or using pytest directly
@@ -37,10 +37,10 @@ The bot includes 72 tests organized in a clean directory structure:
 
 ```
 tests/
-├── unit/              # Unit tests (34 tests)
+├── unit/              # Unit tests (33 tests)
 │   ├── test_exceptions.py    # Exception handling tests
 │   └── test_security.py      # Security unit tests
-├── integration/       # Integration tests (35 tests)
+├── integration/       # Integration tests (39 tests)
 │   ├── test_sniper.py        # Core bot functionality
 │   ├── test_clean.py         # Comprehensive integration tests
 │   └── test_improvements.py  # Feature improvements
@@ -52,7 +52,7 @@ tests/
     └── setup_tests.py        # Test environment setup
 ```
 
-### 1. Unit Tests (34 tests)
+### 1. Unit Tests (33 tests)
 **Location**: `tests/unit/`
 
 #### Exception Handling (`test_exceptions.py`)
@@ -75,7 +75,7 @@ python -m pytest tests/unit/test_exceptions.py -v
 python -m pytest tests/unit/test_security.py -v
 ```
 
-### 2. Integration Tests (35 tests)
+### 2. Integration Tests (39 tests)
 **Location**: `tests/integration/`
 
 #### Core Bot Tests (`test_sniper.py`)
@@ -119,7 +119,7 @@ Run all 72 tests with various options:
 # Run all 72 tests
 python run_tests.py
 
-# Run with coverage report (34% coverage)
+# Run with coverage report (48% coverage)
 python run_tests.py --coverage
 
 # Run using pytest directly
@@ -188,7 +188,7 @@ cp tests/config/test_safe.config.env .env
 
 ## 📊 Coverage Reports
 
-The test suite currently achieves **34% code coverage** across all modules.
+The test suite currently achieves **48% code coverage** across all modules.
 
 Generate HTML coverage reports:
 ```bash
@@ -228,7 +228,7 @@ The organized test structure provides:
 - ✅ 72 comprehensive tests (34 unit + 35 integration + 3 config)
 - ✅ Clean directory organization
 - ✅ Multiple test configurations
-- ✅ 34% code coverage
+- ✅ 48% code coverage
 - ✅ Secure test environment
 - ✅ Easy-to-use test runners
 
@@ -253,7 +253,7 @@ crypto-sniping-bot/
 │   ├── unit/                # Unit tests (34 tests)
 │   │   ├── test_exceptions.py
 │   │   └── test_security.py
-│   ├── integration/         # Integration tests (35 tests)
+│   ├── integration/         # Integration tests (39 tests)
 │   │   ├── test_sniper.py
 │   │   ├── test_clean.py
 │   │   └── test_improvements.py

@@ -11,7 +11,7 @@ A high-performance, secure cryptocurrency sniping bot designed for detecting and
 
 2. **Configure Environment**
    ```bash
-   cp test.config.env .env
+   cp tests/config/test.config.env .env
    # Edit .env with your settings
    ```
 
@@ -47,7 +47,7 @@ For comprehensive documentation, please visit the [docs](docs/) directory:
 - 📊 **Analytics Dashboard** - Performance tracking and reporting
 - 🏗️ **Modular Architecture** - Clean, maintainable codebase
 - ⚡ **High Performance** - Async operations, rate limiting, circuit breakers
-- 🧪 **Comprehensive Testing** - 59 tests with 34% code coverage
+- 🧪 **Comprehensive Testing** - 72 tests with 48% code coverage
 
 ## ⚠️ Disclaimer
 

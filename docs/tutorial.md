@@ -15,14 +15,14 @@ This comprehensive tutorial will guide you through setting up and using the Cryp
 ### Step 1: Installation
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/crypto-sniping-bot.git
+git clone https://github.com/aljazfrancic/crypto-sniping-bot.git
 cd crypto-sniping-bot
 
 # Run automated setup
-python setup_tests.py
+python tests/scripts/setup_tests.py
 
 # Verify installation
-python test_clean.py
+python -m pytest tests/integration/test_clean.py -v
 ```
 
 ### Step 2: Basic Configuration

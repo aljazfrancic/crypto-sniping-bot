@@ -375,7 +375,7 @@ print(f'PATH: {os.environ.get(\"PATH\", \"Not set\")}')
 python cleanup.py
 
 # Recreate test environment:
-python setup_tests.py
+python tests/scripts/setup_tests.py
 
 # Run clean test:
 python test_clean.py

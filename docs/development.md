@@ -8,7 +8,7 @@ This guide covers development practices, testing procedures, and contribution gu
 
 #### 1. Clone and Setup
 ```bash
-git clone https://github.com/your-username/crypto-sniping-bot.git
+git clone https://github.com/aljazfrancic/crypto-sniping-bot.git
 cd crypto-sniping-bot
 
 # Run automated setup
