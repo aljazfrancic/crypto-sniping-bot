@@ -21,16 +21,17 @@ def test_config_enhancements():
         f.write(
             """
 # Test configuration
-RPC_URL=https://mainnet.infura.io/v3/test-key
+RPC_URL=https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID
 BACKUP_RPC_URLS=https://eth.llamarpc.com,https://rpc.ankr.com/eth
 WALLET_ADDRESS=0x742d35Cc6634C0532925a3b8D4C3C3bE6DD5A999
-PRIVATE_KEY=0x3c9ca9e41f3e6b8ff4b7e8f9a2d1c0b9a8e7d6f5c4b3a2916857463524139f8e
+# Test private key - replace with your own for testing
+PRIVATE_KEY=0x0000000000000000000000000000000000000000000000000000000000000001
 ROUTER_ADDRESS=0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D
 FACTORY_ADDRESS=0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f
 WETH_ADDRESS=0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2
 MAX_RPC_CALLS_PER_SECOND=10
 MAX_CONCURRENT_TRADES=5
-WEBHOOK_URL=https://hooks.slack.com/services/test/webhook
+WEBHOOK_URL=https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK
 DATABASE_URL=sqlite:///sniper_data.db
         """
         )
@@ -187,11 +188,12 @@ async def test_blockchain_interface():
 
     # Create mock config
     config = Mock()
-    config.rpc_url = "https://mainnet.infura.io/v3/test-key"
+    config.rpc_url = "https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID"
     config.backup_rpc_urls = ["https://eth.llamarpc.com"]
     config.max_rpc_calls_per_second = 10
+    # Mock private key for testing
     config.private_key = (
-        "0x3c9ca9e41f3e6b8ff4b7e8f9a2d1c0b9a8e7d6f5c4b3a2916857463524139f8e"
+        "0x0000000000000000000000000000000000000000000000000000000000000001"
     )
     config.wallet_address = "0x742d35Cc6634C0532925a3b8D4C3C3bE6DD5A999"
     config.chain_id = 1  # Ethereum mainnet

@@ -327,7 +327,7 @@ curl -X POST -H "Content-Type: application/json" \
   YOUR_WEBHOOK_URL_HERE
 
 # Check webhook configuration:
-WEBHOOK_URL=https://hooks.slack.com/services/your/webhook/url
+WEBHOOK_URL=https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX
 ENABLE_TRADE_NOTIFICATIONS=true
 ```
 

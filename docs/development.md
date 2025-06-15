@@ -145,6 +145,7 @@ class TestSecurityManager:
         assert result is True
         
         # Test dangerous key
+        # Known Hardhat test key - should be blocked by security
         dangerous_key = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
         with pytest.raises(DangerousPrivateKeyError):
             security_manager.validate_private_key(dangerous_key)

@@ -39,7 +39,7 @@ Add your essential settings:
 RPC_URL=https://mainnet.infura.io/v3/YOUR_PROJECT_ID
 PRIVATE_KEY=your_private_key_here
 WALLET_ADDRESS=0xYourWalletAddress
-WEBHOOK_URL=https://hooks.slack.com/services/your/webhook/url
+WEBHOOK_URL=https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
 ### Step 3: Test Run

@@ -1,0 +1,55 @@
+# Gitleaks configuration for crypto-sniping-bot
+# This configuration helps avoid false positives in test files and documentation
+
+[extend]
+# Use default gitleaks rules
+useDefault = true
+
+[[rules]]
+description = "Hardhat Test Private Key"
+id = "hardhat-test-key"
+regex = '''0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'''
+path = '''(test|spec|docs)/.*'''
+
+[[rules]]
+description = "Test/Example API Keys"
+id = "test-api-key"
+regex = '''(test-key|example-key|your-api-key|fake-api-key)'''
+path = '''(test|spec|docs)/.*'''
+
+[[rules]]
+description = "Example Webhook URLs"
+id = "example-webhook"
+regex = '''https://hooks\.slack\.com/services/(your|test|example)/.*'''
+path = '''(test|spec|docs)/.*'''
+
+# Global allowlist for common false positives
+[allowlist]
+description = "Allowlisted files and patterns"
+files = [
+    '''(.*)?test(.*)?(\.env|\.py|\.md)$''',
+    '''(.*)?docs(.*)?(\.md)$''',
+    '''(.*)?spec(.*)?(\.py)$''',
+]
+
+# Specific patterns to ignore
+regexes = [
+    # Hardhat default test key (well-known public test key)
+    '''0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80''',
+    # Example/test patterns
+    '''(test-key|example-key|your-.*-key|fake-.*-key)''',
+    '''https://hooks\.slack\.com/services/(your|test|example)/.*''',
+    '''https://.*\.infura\.io/v3/(test-key|example-key|your-key)''',
+    # Common test addresses
+    '''0x742d35Cc6634C0532925a3b8D4C3C3bE6DD5A999''',
+    '''0x3c9ca9e41f3e6b8ff4b7e8f9a2d1c0b9a8e7d6f5c4b3a2916857463524139f8e''',
+]
+
+# Paths to completely ignore
+paths = [
+    '''.*test.*\.env''',
+    '''.*test.*\.py''',
+    '''docs/.*\.md''',
+    '''tests/.*\.py''',
+    '''.*\.example\.env''',
+] 
