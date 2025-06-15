@@ -5,7 +5,7 @@ setup(
     version="0.1.0",
     packages=find_packages(),
     install_requires=[
-        "web3==6.15.1",
+        "web3==7.12.0",
         "python-dotenv==1.0.1",
         "eth-account==0.9.0",
         "eth-utils==2.3.1",
