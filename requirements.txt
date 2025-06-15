@@ -12,7 +12,7 @@ aiohttp<4,>=3.9.0
 asyncio-throttle==1.0.2
 
 # HTTP requests
-requests==2.31.0
+requests==2.32.4
 urllib3==2.4.0
 
 # Logging and monitoring
