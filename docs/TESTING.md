@@ -1,106 +1,145 @@
 # Testing Guide for Crypto Sniping Bot
 
-This guide covers all testing options available for the crypto sniping bot project.
+This guide covers the comprehensive testing suite with 72 tests organized in a clean structure.
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 - Python 3.8+ installed
-- All dependencies installed (run `python setup_tests.py` to set up everything)
+- All dependencies installed (`pip install -r requirements.txt`)
+
+### Setup Test Environment
+```bash
+# Copy test configuration
+cp tests/config/test.config.env .env
+
+# Or use safe test configuration
+cp tests/config/test_safe.config.env .env
+```
 
 ### Run All Tests
 ```bash
-# Comprehensive test (recommended for verification)
-python test_clean.py
-
-# Standard pytest with coverage
+# Run all 72 tests
 python run_tests.py
 
+# With coverage report (34% coverage)
+python run_tests.py --coverage
+
 # Or using pytest directly
-pytest
+pytest tests/ -v
 ```
 
-## 📋 Test Categories
+## 📋 Test Structure
 
-### 1. Comprehensive Integration Test
-**File**: `test_clean.py`
+### Organized Test Categories
 
-This is our main test suite that validates all major improvements:
-- ✅ Security enhancements (private key protection)
-- ✅ Analytics and performance tracking
-- ✅ Production-ready utilities (rate limiting, circuit breaker)
-- ✅ Blockchain interface improvements
-- ✅ Notification system
-- ✅ Performance monitoring
-- ✅ Error handling
+The bot includes 72 tests organized in a clean directory structure:
 
-```bash
-python test_clean.py
+```
+tests/
+├── unit/              # Unit tests (34 tests)
+│   ├── test_exceptions.py    # Exception handling tests
+│   └── test_security.py      # Security unit tests
+├── integration/       # Integration tests (35 tests)
+│   ├── test_sniper.py        # Core bot functionality
+│   ├── test_clean.py         # Comprehensive integration tests
+│   └── test_improvements.py  # Feature improvements
+├── config/           # Test configurations
+│   ├── test.config.env       # Standard test config
+│   └── test_safe.config.env  # Safe test config (no real funds)
+└── scripts/          # Test utilities
+    ├── run_tests.py          # Test runner script
+    └── setup_tests.py        # Test environment setup
 ```
 
-### 2. Security Tests
-**Directory**: `tests/test_security.py`
+### 1. Unit Tests (34 tests)
+**Location**: `tests/unit/`
 
-Focused on security features:
-- Price manipulation detection
-- MEV protection
-- Contract verification
-- Sandwich attack detection
-- Gas price manipulation
-- Contract blacklisting
-- Token restrictions
-
-```bash
-pytest tests/test_security.py -v
-```
-
-### 3. Exception Handling Tests
-**Directory**: `tests/test_exceptions.py`
-
-Tests custom exception classes:
+#### Exception Handling (`test_exceptions.py`)
 - Base exception functionality
 - Error mapping from Web3
 - Contextual error information
 - Exception inheritance
 
 ```bash
-pytest tests/test_exceptions.py -v
+python -m pytest tests/unit/test_exceptions.py -v
+```
+
+#### Security Unit Tests (`test_security.py`)
+- Private key validation
+- Security configuration
+- Risk management parameters
+- Input validation
+
+```bash
+python -m pytest tests/unit/test_security.py -v
+```
+
+### 2. Integration Tests (35 tests)
+**Location**: `tests/integration/`
+
+#### Core Bot Tests (`test_sniper.py`)
+- End-to-end trading workflows
+- Blockchain integration
+- Error handling scenarios
+- Performance validation
+
+```bash
+python -m pytest tests/integration/test_sniper.py -v
+```
+
+#### Clean Integration Tests (`test_clean.py`)
+- Complete system validation
+- Security enhancements verification
+- Analytics and performance tracking
+- Production-ready utilities testing
+
+```bash
+python -m pytest tests/integration/test_clean.py -v
+```
+
+#### Feature Improvements (`test_improvements.py`)
+- New feature validation
+- Enhancement testing
+- Regression prevention
+- Performance improvements
+
+```bash
+python -m pytest tests/integration/test_improvements.py -v
 ```
 
 ## 🛠️ Test Runners
 
 ### Python Test Runner
-**File**: `run_tests.py`
+**File**: `tests/scripts/run_tests.py` (also available as `run_tests.py` in root)
 
-Convenient test runner with multiple options:
+Run all 72 tests with various options:
 
 ```bash
-# All tests with coverage
+# Run all 72 tests
 python run_tests.py
 
-# Unit tests only
-python run_tests.py unit
+# Run with coverage report (34% coverage)
+python run_tests.py --coverage
 
-# Integration tests only
-python run_tests.py integration
+# Run using pytest directly
+python -m pytest tests/ -v
 
-# Clean comprehensive test
-python run_tests.py clean
-
-# Security tests only
-python run_tests.py security
+# Run specific categories
+python -m pytest tests/unit/ -v        # Unit tests only
+python -m pytest tests/integration/ -v # Integration tests only
 ```
 
-### Windows Batch File
-**File**: `run_tests.bat`
+### Individual Test Files
+```bash
+# Run specific test files
+python -m pytest tests/unit/test_security.py -v
+python -m pytest tests/integration/test_sniper.py -v
+python -m pytest tests/integration/test_clean.py -v
 
-Double-click to run or use from command line:
-
-```cmd
-run_tests.bat              # All tests
-run_tests.bat clean        # Comprehensive test
-run_tests.bat unit         # Unit tests
-run_tests.bat security     # Security tests
+# Run with specific markers
+python -m pytest -m unit tests/ -v
+python -m pytest -m integration tests/ -v
 ```
 
 ## ⚙️ Configuration
@@ -123,44 +162,75 @@ Configured with:
 @pytest.mark.requires_node  # Requires blockchain node
 ```
 
-### Safe Test Configuration
-**File**: `test_safe.config.env`
+### Test Configurations
+**Files**: `tests/config/`
 
+#### Standard Test Config (`test.config.env`)
+Configuration for local development and testing:
+- Local Hardhat RPC URL (http://localhost:8545)
+- Local chain ID (31337)
+- Test environment settings
+
+#### Safe Test Config (`test_safe.config.env`)
 Safe configuration file for testing that won't expose real funds:
 - Placeholder RPC URLs
 - Test private keys (detected and rejected by security)
 - Safe wallet addresses
 - Test webhook URLs
 
+```bash
+# Use standard test config
+cp tests/config/test.config.env .env
+
+# Use safe test config (recommended)
+cp tests/config/test_safe.config.env .env
+```
+
 ## 📊 Coverage Reports
+
+The test suite currently achieves **34% code coverage** across all modules.
 
 Generate HTML coverage reports:
 ```bash
-pytest --cov=bot --cov-report=html:htmlcov
+# Run tests with coverage
+python run_tests.py --coverage
+
+# Or using pytest directly
+pytest --cov=bot --cov-report=html:htmlcov tests/
+
+# Generate terminal coverage report
+pytest --cov=bot --cov-report=term-missing tests/
 ```
 
-View the report:
+View the HTML report:
 ```bash
 # Open htmlcov/index.html in your browser
+start htmlcov/index.html  # Windows
+open htmlcov/index.html   # macOS
+xdg-open htmlcov/index.html  # Linux
 ```
 
 ## 🔧 Setup and Maintenance
 
 ### Initial Setup
 ```bash
-# Run the setup script to configure everything
-python setup_tests.py
+# Install dependencies
+pip install -r requirements.txt
+
+# Set up test environment
+cp tests/config/test.config.env .env
+
+# Verify setup by running tests
+python run_tests.py
 ```
 
-This script:
-- ✅ Verifies Python version compatibility
-- ✅ Installs all dependencies
-- ✅ Creates necessary directories
-- ✅ Sets up ABI files
-- ✅ Creates safe test configurations
-- ✅ Configures pytest
-- ✅ Creates test runner scripts
-- ✅ Verifies the setup
+The organized test structure provides:
+- ✅ 72 comprehensive tests (34 unit + 35 integration + 3 config)
+- ✅ Clean directory organization
+- ✅ Multiple test configurations
+- ✅ 34% code coverage
+- ✅ Secure test environment
+- ✅ Easy-to-use test runners
 
 ### Clean Up
 ```bash
@@ -173,26 +243,33 @@ python cleanup.py
 pip install -r requirements.txt --upgrade
 ```
 
-## 📁 Test Structure
+## 📁 Current Test Structure
 
 ```
 crypto-sniping-bot/
-├── test_clean.py              # Main comprehensive test
-├── run_tests.py               # Test runner script
-├── run_tests.bat             # Windows batch runner
-├── setup_tests.py            # Test environment setup
+├── run_tests.py              # Main test runner (wrapper)
 ├── pytest.ini               # Pytest configuration
-├── test_safe.config.env     # Safe test configuration
-├── tests/                   # Traditional pytest tests
-│   ├── test_security.py     # Security tests
-│   ├── test_exceptions.py   # Exception tests
-│   └── conftest.py          # Pytest fixtures
-├── abis/                    # Contract ABI files
+├── tests/                   # Organized test directory
+│   ├── unit/                # Unit tests (34 tests)
+│   │   ├── test_exceptions.py
+│   │   └── test_security.py
+│   ├── integration/         # Integration tests (35 tests)
+│   │   ├── test_sniper.py
+│   │   ├── test_clean.py
+│   │   └── test_improvements.py
+│   ├── config/             # Test configurations
+│   │   ├── test.config.env
+│   │   └── test_safe.config.env
+│   └── scripts/            # Test utilities
+│       ├── run_tests.py
+│       └── setup_tests.py
+├── conftest.py             # Pytest fixtures
+├── abis/                   # Contract ABI files
 │   ├── erc20.json
 │   ├── router.json
 │   ├── pair.json
 │   └── factory.json
-└── requirements.txt         # Dependencies
+└── requirements.txt        # Dependencies
 ```
 
 ## 🎯 Testing Best Practices

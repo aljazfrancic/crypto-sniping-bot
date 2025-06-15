@@ -20,7 +20,12 @@ A high-performance, secure cryptocurrency sniping bot designed for detecting and
    python run_tests.py
    ```
 
-4. **Start Trading**
+4. **Validate CI Pipeline (Optional)**
+   ```bash
+   python validate_ci.py
+   ```
+
+5. **Start Trading**
    ```bash
    python -m bot.sniper
    ```

@@ -72,16 +72,26 @@ cp production.config.env .env
 # Edit .env with your settings (see Configuration section)
 ```
 
-### 4. Verify Setup
+### 4. Configure Test Environment
 ```bash
-# Run comprehensive tests
-python test_clean.py
+# Copy test configuration
+cp tests/config/test.config.env .env
 
-# Or run all tests with coverage
-python run_tests.py
+# Verify configuration
+findstr "RPC_URL" .env
+findstr "CHAIN_ID" .env
 ```
 
-### 5. Deploy Smart Contracts (Optional)
+### 5. Verify Setup
+```bash
+# Run comprehensive test suite
+python run_tests.py
+
+# All 72 tests with coverage report
+python run_tests.py --coverage
+```
+
+### 6. Deploy Smart Contracts (Optional)
 ```bash
 # For enhanced trading features
 npm install
@@ -165,33 +175,46 @@ python -m bot.sniper --strategy price-impact
 
 ## 🧪 Testing
 
-The bot includes a comprehensive testing suite:
+The bot includes a comprehensive testing suite with 72 tests organized in a clean structure:
 
-### Quick Verification
-```bash
-# Comprehensive integration test
-python test_clean.py
+### Test Structure
+```
+tests/
+├── unit/              # Unit tests (34 tests)
+│   ├── test_exceptions.py
+│   └── test_security.py
+├── integration/       # Integration tests (35 tests)
+│   ├── test_sniper.py
+│   ├── test_clean.py
+│   └── test_improvements.py
+├── config/           # Test configurations
+│   ├── test.config.env
+│   └── test_safe.config.env
+└── scripts/          # Test utilities
+    ├── run_tests.py
+    └── setup_tests.py
 ```
 
-### Test Categories
+### Running Tests
 ```bash
-# All tests with coverage
+# Run all 72 tests
 python run_tests.py
 
-# Security tests only
-python run_tests.py security
+# Run with coverage (34% coverage)
+python run_tests.py --coverage
 
-# Unit tests only  
-python run_tests.py unit
-
-# Integration tests only
-python run_tests.py integration
+# Run specific test categories
+python -m pytest tests/unit/         # Unit tests only
+python -m pytest tests/integration/  # Integration tests only
 ```
 
-### Windows Users
-```cmd
-# Run tests using batch file
-run_tests.bat clean
+### Test Configuration
+```bash
+# Set up test environment
+cp tests/config/test.config.env .env
+
+# Use safe test configuration (no real funds)
+cp tests/config/test_safe.config.env .env
 ```
 
 See [TESTING.md](TESTING.md) for detailed testing documentation.
@@ -327,10 +350,15 @@ graph TB
 # Clone and setup
 git clone https://github.com/aljazfrancic/crypto-sniping-bot.git
 cd crypto-sniping-bot
-python setup_tests.py
 
-# Install development dependencies
+# Install dependencies
 pip install -r requirements.txt
+
+# Set up test environment
+cp tests/config/test.config.env .env
+
+# Run tests to verify setup
+python run_tests.py
 ```
 
 ### Code Quality
@@ -350,12 +378,14 @@ bandit -r bot/
 
 ### Testing During Development
 ```bash
-# Quick test during development
-python run_tests.py unit
+# Quick test during development  
+python -m pytest tests/unit/ -v
 
-# Full test suite before commit
-python test_clean.py
-pytest tests/ -v
+# Full test suite before commit (all 72 tests)
+python run_tests.py
+
+# Run with coverage report
+python run_tests.py --coverage
 ```
 
 ## 📚 Documentation

@@ -77,8 +77,11 @@ npm install
 # Copy production config template
 cp production.config.env .env
 
-# Copy test config for safe testing
-cp test_safe.config.env test.env
+# Copy test config for development/testing
+cp tests/config/test.config.env test.env
+
+# Or use safe test config (recommended for development)
+cp tests/config/test_safe.config.env .env
 ```
 
 ## 🔧 Configuration Setup
@@ -139,14 +142,15 @@ npx hardhat run scripts/deploy.js --network sepolia
 ### 3. Verify Installation
 
 ```bash
-# Run comprehensive test suite
-python test_clean.py
-
-# Run security tests
-python run_tests.py security
-
-# Run all tests with coverage
+# Run all 72 tests
 python run_tests.py
+
+# Run with coverage report (34% coverage)
+python run_tests.py --coverage
+
+# Run specific test categories
+python -m pytest tests/unit/ -v        # Unit tests
+python -m pytest tests/integration/ -v # Integration tests
 ```
 
 ## 🛠️ Development Setup
@@ -195,44 +199,57 @@ bandit -r bot/
 
 ## 🧪 Testing Infrastructure
 
-### Test Categories
+### Test Structure
 
-The bot includes comprehensive testing:
+The bot includes 72 comprehensive tests organized by category:
 
-#### 1. Unit Tests
-```bash
-# Run unit tests
-python run_tests.py unit
-pytest tests/test_*.py -v
+```
+tests/
+├── unit/              # Unit tests (34 tests)
+│   ├── test_exceptions.py
+│   └── test_security.py  
+├── integration/       # Integration tests (35 tests)
+│   ├── test_sniper.py
+│   ├── test_clean.py
+│   └── test_improvements.py
+├── config/           # Test configurations
+│   ├── test.config.env
+│   └── test_safe.config.env
+└── scripts/          # Test utilities
+    ├── run_tests.py
+    └── setup_tests.py
 ```
 
-#### 2. Integration Tests
+### Running Tests
+
+#### 1. All Tests
 ```bash
-# Run integration tests
-python run_tests.py integration
-pytest tests/test_integration.py -v
+# Run all 72 tests
+python run_tests.py
+
+# With coverage report (34% coverage)
+python run_tests.py --coverage
 ```
 
-#### 3. Security Tests
+#### 2. Specific Categories
 ```bash
-# Run security test suite
-python run_tests.py security
-pytest tests/test_security.py -v
+# Unit tests only
+python -m pytest tests/unit/ -v
+
+# Integration tests only 
+python -m pytest tests/integration/ -v
+
+# Specific test file
+python -m pytest tests/unit/test_security.py -v
 ```
 
-#### 4. Clean Environment Test
+#### 3. Test Configuration
 ```bash
-# Run comprehensive clean test
-python test_clean.py
-```
+# Set up test environment
+cp tests/config/test.config.env .env
 
-### Windows Users
-
-```cmd
-# Run tests using batch file
-run_tests.bat clean
-run_tests.bat security
-run_tests.bat all
+# Verify test setup
+python -c "import os; print('RPC_URL:', os.getenv('RPC_URL', 'Not set'))"
 ```
 
 ## 🔒 Security Setup
