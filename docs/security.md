@@ -254,7 +254,7 @@ python -m bot.security --verify <address>
 
 # 🔒 Security Guide
 
-This guide covers the comprehensive security features implemented in the Crypto Sniping Bot enterprise edition to protect your funds and trading operations.
+This guide covers the comprehensive security features implemented in the Crypto Sniping Bot to protect your funds and trading operations.
 
 ## 🛡️ Security Architecture
 

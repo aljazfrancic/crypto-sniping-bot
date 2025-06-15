@@ -1,6 +1,6 @@
 # 📦 Installation Guide
 
-This guide will walk you through setting up the Crypto Sniping Bot enterprise edition with all dependencies, configurations, and testing infrastructure.
+This guide will walk you through setting up the Crypto Sniping Bot with all dependencies, configurations, and testing infrastructure.
 
 ## 🖥️ System Requirements
 

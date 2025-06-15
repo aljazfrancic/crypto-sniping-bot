@@ -1,6 +1,6 @@
-# 🚀 Crypto Sniping Bot - Enterprise Edition
+# 🚀 Crypto Sniping Bot
 
-A production-ready, enterprise-grade cryptocurrency sniping bot built with Python for automated trading on decentralized exchanges (DEXs). Features comprehensive security, analytics, monitoring, and fault tolerance.
+A production-ready, professional-grade cryptocurrency sniping bot built with Python for automated trading on decentralized exchanges (DEXs). Features comprehensive security, analytics, monitoring, and fault tolerance.
 
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue)](https://python.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -10,7 +10,7 @@ A production-ready, enterprise-grade cryptocurrency sniping bot built with Pytho
 
 ## ✨ Key Features
 
-### 🔒 **Enterprise Security**
+### 🔒 **Advanced Security**
 - **Private Key Protection**: Advanced detection and rejection of test/dangerous keys
 - **MEV Protection**: Shields against frontrunning and sandwich attacks  
 - **Honeypot Detection**: Comprehensive token safety analysis

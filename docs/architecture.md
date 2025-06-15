@@ -1,6 +1,6 @@
 # 🏗️ Architecture Guide
 
-This document provides a comprehensive overview of the Crypto Sniping Bot enterprise edition architecture, detailing all components, their interactions, and design patterns.
+This document provides a comprehensive overview of the Crypto Sniping Bot architecture, detailing all components, their interactions, and design patterns.
 
 ## 🌟 System Overview
 
@@ -15,7 +15,7 @@ The bot follows a modular, microservice-inspired architecture designed for:
 
 ```mermaid
 graph TB
-    subgraph "🎯 Crypto Sniping Bot Enterprise Architecture"
+    subgraph "🎯 Crypto Sniping Bot Architecture"
         direction TB
 
         subgraph "🚀 Application Layer"
@@ -522,4 +522,4 @@ Intelligent alerting with escalation policies.
 
 ---
 
-**🏗️ This architecture is designed for enterprise-grade cryptocurrency trading with emphasis on security, performance, and reliability.**
+**🏗️ This architecture is designed for professional-grade cryptocurrency trading with emphasis on security, performance, and reliability.**

@@ -1,6 +1,6 @@
-# 🧪 Testnet Deployment Guide - Enterprise Edition
+# 🧪 Testnet Deployment Guide
 
-This comprehensive guide covers deploying and testing the crypto sniping bot enterprise edition on various testnets. Includes advanced testing procedures, security validation, and performance benchmarking. Testing on testnet is crucial before mainnet deployment to ensure all components work correctly without risking real funds.
+This comprehensive guide covers deploying and testing the crypto sniping bot on various testnets. Includes advanced testing procedures, security validation, and performance benchmarking. Testing on testnet is crucial before mainnet deployment to ensure all components work correctly without risking real funds.
 
 ## 📋 Prerequisites
 

@@ -1,6 +1,6 @@
 # 🚨 Troubleshooting Guide
 
-This comprehensive guide helps you diagnose and resolve common issues with the Crypto Sniping Bot enterprise edition.
+This comprehensive guide helps you diagnose and resolve common issues with the Crypto Sniping Bot.
 
 ## 🔍 Quick Diagnostics
 
@@ -564,10 +564,10 @@ while True:
 
 ### Professional Support
 
-For enterprise support:
+For professional support:
 - 📧 **Email**: support@yourproject.com
 - 🔒 **Security Issues**: security@yourproject.com
-- 💼 **Enterprise Support**: enterprise@yourproject.com
+- 💼 **Professional Support**: support@yourproject.com
 
 ## 📋 Troubleshooting Checklist
 

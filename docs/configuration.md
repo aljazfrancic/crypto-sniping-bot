@@ -1,6 +1,6 @@
 # ⚙️ Configuration Guide
 
-This comprehensive guide covers all configuration options for the Crypto Sniping Bot enterprise edition.
+This comprehensive guide covers all configuration options for the Crypto Sniping Bot.
 
 ## 📋 Configuration Files
 

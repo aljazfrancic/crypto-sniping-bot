@@ -1,6 +1,6 @@
-# 🔄 DEX Integration - Enterprise Edition
+# 🔄 DEX Integration
 
-This comprehensive guide explains how the Crypto Sniping Bot enterprise edition integrates with various decentralized exchanges, featuring advanced routing, multi-DEX arbitrage, and sophisticated trading strategies.
+This comprehensive guide explains how the Crypto Sniping Bot integrates with various decentralized exchanges, featuring advanced routing, multi-DEX arbitrage, and sophisticated trading strategies.
 
 ## 📊 Supported DEXes
 

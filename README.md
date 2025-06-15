@@ -17,7 +17,7 @@ A high-performance, secure cryptocurrency sniping bot designed for detecting and
 
 3. **Run Tests**
    ```bash
-   python test_clean.py
+   python run_tests.py
    ```
 
 4. **Start Trading**

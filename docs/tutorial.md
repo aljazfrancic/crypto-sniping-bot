@@ -1,6 +1,6 @@
 # 📚 Tutorial - Getting Started with Crypto Sniping Bot
 
-This comprehensive tutorial will guide you through setting up and using the Crypto Sniping Bot enterprise edition, from installation to advanced trading strategies.
+This comprehensive tutorial will guide you through setting up and using the Crypto Sniping Bot, from installation to advanced trading strategies.
 
 ## 🎯 What You'll Learn
 

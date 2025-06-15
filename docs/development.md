@@ -1,6 +1,6 @@
 # 👨‍💻 Development Guide
 
-This guide covers development practices, testing procedures, and contribution guidelines for the Crypto Sniping Bot enterprise edition.
+This guide covers development practices, testing procedures, and contribution guidelines for the Crypto Sniping Bot.
 
 ## 🚀 Getting Started
 

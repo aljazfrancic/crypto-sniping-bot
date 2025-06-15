@@ -1,6 +1,6 @@
 # 📖 API Reference
 
-Comprehensive API documentation for the Crypto Sniping Bot enterprise edition. This guide covers all modules, classes, and methods available in the bot.
+Comprehensive API documentation for the Crypto Sniping Bot. This guide covers all modules, classes, and methods available in the bot.
 
 ## 🎯 Overview
 
