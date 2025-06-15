@@ -53,14 +53,24 @@ class Config:
         """Setup security configurations."""
         # Generate or load encryption key for sensitive data
         key_file = Path(".secret_key")
+
+        key_data = None
         if key_file.exists():
             with open(key_file, "rb") as f:
-                self._encryption_key = f.read()
+                key_data = f.read()
+                if isinstance(key_data, str):
+                    key_data = key_data.encode()
+                try:
+                    Fernet(key_data)
+                    self._encryption_key = key_data
+                except Exception:
+                    self._encryption_key = Fernet.generate_key()
         else:
             self._encryption_key = Fernet.generate_key()
+
+        if not key_file.exists() or self._encryption_key != key_data:
             with open(key_file, "wb") as f:
                 f.write(self._encryption_key)
-            # Secure the key file
             os.chmod(key_file, 0o600)
 
         self._cipher = Fernet(self._encryption_key)
@@ -124,6 +134,7 @@ class Config:
         dangerous_keys = [
             "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80",  # Hardhat test key
             "0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d",  # Another common test key
+            "0x0000000000000000000000000000000000000000000000000000000000000001",  # Common test key
         ]
 
         # Also check for obvious test patterns
@@ -250,6 +261,11 @@ class Config:
     def auto_sell(self) -> bool:
         """Get auto-sell setting."""
         return os.getenv("AUTO_SELL", "true").lower() == "true"
+
+    @property
+    def wait_for_confirmation(self) -> bool:
+        """Return whether transactions should wait for confirmation."""
+        return os.getenv("WAIT_FOR_CONFIRMATION", "false").lower() == "true"
 
     @property
     def gas_price_multiplier(self) -> float:

@@ -514,7 +514,7 @@ class SniperBot:
             balance_wei = self.w3.eth.get_balance(
                 self.w3.eth.default_account or self.blockchain.account.address
             )
-            return self.w3.from_wei(balance_wei, "ether")
+            return Web3.from_wei(balance_wei, "ether")
         except Exception as e:
             logger.error(f"Failed to get balance: {e}")
             return 0.0
