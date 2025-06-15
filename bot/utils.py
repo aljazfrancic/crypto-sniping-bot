@@ -51,7 +51,7 @@ class RateLimiter:
 
                 # Calculate wait time if we've exceeded the rate limit
                 wait_time = self.time_window - (now - self.calls[0])
-                
+
             # Wait outside the lock to avoid blocking other operations
             if wait_time > 0:
                 logger.debug(f"Rate limit reached, waiting {wait_time:.2f} seconds")
