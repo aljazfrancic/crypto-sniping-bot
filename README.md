@@ -2,6 +2,12 @@
 
 A high-performance, secure cryptocurrency sniping bot designed for detecting and trading newly listed tokens on decentralized exchanges.
 
+[![Python](https://img.shields.io/badge/Python-3.8%2B-blue)](https://python.org)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+![Tests](https://img.shields.io/badge/Tests-Passing-brightgreen)
+![Security](https://img.shields.io/badge/Security-Hardened-red)
+![Coverage](https://img.shields.io/badge/Coverage-48%25-yellow)
+
 ## 🚀 Quick Start
 
 1. **Install Dependencies**

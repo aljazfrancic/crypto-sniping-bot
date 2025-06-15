@@ -2,12 +2,6 @@
 
 A production-ready, professional-grade cryptocurrency sniping bot built with Python for automated trading on decentralized exchanges (DEXs). Features comprehensive security, analytics, monitoring, and fault tolerance.
 
-[![Python](https://img.shields.io/badge/Python-3.8%2B-blue)](https://python.org)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](../LICENSE)
-![Tests](https://img.shields.io/badge/Tests-Passing-brightgreen)
-![Security](https://img.shields.io/badge/Security-Hardened-red)
-![Coverage](https://img.shields.io/badge/Coverage-48%25-yellow)
-
 ## ✨ Key Features
 
 ### 🔒 **Advanced Security**
