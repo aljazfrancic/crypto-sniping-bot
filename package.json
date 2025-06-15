@@ -1,0 +1,66 @@
+{
+  "name": "crypto-sniping-bot",
+  "version": "1.0.0",
+  "description": "A high-performance bot for sniping newly created liquidity pools on DEXes",
+  "main": "index.js",
+  "scripts": {
+    "test": "hardhat test --parallel",
+    "test:all": "npm run test:python && npm run test",
+    "test:python": "pytest tests/ -v",
+    "compile": "hardhat compile",
+    "deploy": "hardhat run scripts/deploy.js",
+    "deploy:local": "hardhat run scripts/deploy.js --network localhost",
+    "deploy:bsc": "hardhat run scripts/deploy.js --network bsc",
+    "deploy:bscTestnet": "hardhat run scripts/deploy.js --network bscTestnet",
+    "deploy:goerli": "hardhat run scripts/deploy.js --network goerli",
+    "node": "hardhat node",
+    "node:fork": "hardhat node --fork $ETHEREUM_RPC",
+    "lint": "eslint . --ext .js,.ts",
+    "lint:fix": "eslint . --ext .js,.ts --fix",
+    "format": "prettier --write \"**/*.{js,ts,sol,json,md}\"",
+    "clean": "hardhat clean && rm -rf cache artifacts",
+    "coverage": "hardhat coverage"
+  },
+  "keywords": [
+    "crypto",
+    "trading",
+    "bot",
+    "defi",
+    "ethereum"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.9.3",
+    "dotenv": "^16.4.5",
+    "ethers": "^6.11.1"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@nomicfoundation/hardhat-chai-matchers": "^2.0.9",
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
+    "@nomicfoundation/hardhat-verify": "^2.0.0",
+    "@typechain/ethers-v6": "^0.5.1",
+    "@typechain/hardhat": "^9.1.0",
+    "@types/chai": "^4.3.11",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "^20.11.24",
+    "chai": "^4.3.7",
+    "eslint": "^9.28.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^4.2.1",
+    "hardhat": "^2.19.5",
+    "hardhat-gas-reporter": "^1.0.8",
+    "prettier": "^3.5.3",
+    "prettier-plugin-solidity": "^1.1.3",
+    "solhint": "^5.1.0",
+    "solidity-coverage": "^0.8.5",
+    "ts-node": "^10.9.1",
+    "typechain": "^8.3.2",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=7.0.0"
+  }
+}
