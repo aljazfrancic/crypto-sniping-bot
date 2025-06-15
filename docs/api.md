@@ -6,14 +6,14 @@ Comprehensive API documentation for the Crypto Sniping Bot. This guide covers al
 
 The bot is organized into several key modules:
 
-- **[Core Bot](#-core-bot-api)**: Main bot orchestration
-- **[Blockchain Interface](#-blockchain-interface-api)**: Blockchain interactions
-- **[Trading Engine](#-trading-engine-api)**: Trade execution
-- **[Security Module](#-security-module-api)**: Security and risk management
-- **[Analytics Engine](#-analytics-engine-api)**: Performance tracking
-- **[Utilities](#-utilities-api)**: Production-ready utilities
-- **[Configuration](#-configuration-api)**: Configuration management
-- **[Notifications](#-notifications-api)**: Alert and notification system
+- **[Core Bot](#🤖-core-bot-api)**: Main bot orchestration
+- **[Blockchain Interface](#📊-blockchain-interface-api)**: Blockchain interactions
+- **[Trading Engine](#💰-trading-engine-api)**: Trade execution
+- **[Security Module](#🛡️-security-module-api)**: Security and risk management
+- **[Analytics Engine](#📈-analytics-engine-api)**: Performance tracking
+- **[Utilities](#⚙️-utilities-api)**: Production-ready utilities
+- **[Configuration](#📋-configuration-api)**: Configuration management
+- **[Notifications](#🔔-notifications-api)**: Alert and notification system
 
 ## 🤖 Core Bot API
 

@@ -49,7 +49,7 @@ tests/
 │   └── test_safe.config.env  # Safe test config (no real funds)
 └── scripts/          # Test utilities
     ├── run_tests.py          # Test runner script
-    └── setup_tests.py        # Test environment setup
+    └── setup_tests.py        # Test environment setup (in tests/scripts/)
 ```
 
 ### 1. Unit Tests (33 tests)
@@ -262,7 +262,7 @@ crypto-sniping-bot/
 │   │   └── test_safe.config.env
 │   └── scripts/            # Test utilities
 │       ├── run_tests.py
-│       └── setup_tests.py
+│       └── setup_tests.py  # Test environment setup
 ├── conftest.py             # Pytest fixtures
 ├── abis/                   # Contract ABI files
 │   ├── erc20.json
@@ -287,7 +287,7 @@ crypto-sniping-bot/
 ### For CI/CD
 ```bash
 # In your CI pipeline
-python setup_tests.py          # Setup environment
+python tests/scripts/setup_tests.py  # Setup environment
 pytest --cov=bot --junitxml=results.xml --cov-report=xml
 ```
 
@@ -337,7 +337,7 @@ class TestYourFeature:
 
 ### Common Issues
 
-1. **Import Errors**: Run `python setup_tests.py` to ensure proper setup
+1. **Import Errors**: Run `python tests/scripts/setup_tests.py` to ensure proper setup
 2. **Permission Errors**: On Windows, run as administrator if needed
 3. **Missing Dependencies**: Check `requirements.txt` and reinstall
 4. **Database Lock Errors**: Normal on Windows, tests handle this gracefully

@@ -217,7 +217,7 @@ tests/
 │   └── test_safe.config.env
 └── scripts/          # Test utilities
     ├── run_tests.py
-    └── setup_tests.py
+    └── setup_tests.py  # Located in tests/scripts/
 ```
 
 ### Running Tests

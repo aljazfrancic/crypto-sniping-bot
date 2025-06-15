@@ -12,7 +12,7 @@ git clone https://github.com/aljazfrancic/crypto-sniping-bot.git
 cd crypto-sniping-bot
 
 # Run automated setup
-python setup_tests.py
+python tests/scripts/setup_tests.py
 
 # Or manual setup
 python -m venv .venv
@@ -80,8 +80,10 @@ crypto-sniping-bot/
 ├── abis/                  # Smart contract ABIs
 ├── logs/                  # Log files
 ├── data/                  # Database and data files
-├── test_clean.py          # Comprehensive integration test
-├── setup_tests.py         # Test environment setup
+├── tests/                 # Test suite
+│   ├── integration/
+│   │   ├── test_clean.py      # Comprehensive integration test
+├── tests/scripts/setup_tests.py  # Test environment setup
 ├── run_tests.py           # Test runner
 └── requirements.txt       # Dependencies
 ```
@@ -118,7 +120,7 @@ pytest tests/test_security.py -v
 Full system test in clean environment:
 ```bash
 # Run comprehensive clean test
-python test_clean.py
+python -m pytest tests/integration/test_clean.py -v
 ```
 
 ### Writing Tests
@@ -371,7 +373,7 @@ async def test_new_security_feature(self, security_manager):
 #### 4. Run Test Suite
 ```bash
 # Run all tests
-python test_clean.py
+python -m pytest tests/integration/test_clean.py -v
 
 # Run specific tests
 pytest tests/test_security.py::test_new_security_feature -v
@@ -417,7 +419,7 @@ git push origin feature/new-security-feature
 ```bash
 # Reviewer checkout and test
 git checkout feature/new-security-feature
-python test_clean.py
+python -m pytest tests/integration/test_clean.py -v
 python run_tests.py security
 ```
 
@@ -690,7 +692,7 @@ jobs:
       
       - name: Run tests
         run: |
-          python test_clean.py
+          python -m pytest tests/integration/test_clean.py -v
           pytest tests/ --cov=bot --cov-report=xml
       
       - name: Code quality
