@@ -9,6 +9,7 @@ Run this before pushing to validate your changes will pass CI.
 import os
 import subprocess
 import sys
+import shutil
 from pathlib import Path
 
 
@@ -28,6 +29,21 @@ def run_command(cmd, description, allow_failure=False):
         if not allow_failure:
             return False
     return True
+
+
+def setup_test_environment():
+    """Setup test environment by copying config file."""
+    print("\n🔄 Setup test environment...")
+    try:
+        # Cross-platform file copy
+        shutil.copy("tests/config/test.config.env", ".env")
+        print("✅ Setup test environment - PASSED")
+        print("   Output: Copied tests/config/test.config.env to .env")
+        return True
+    except Exception as e:
+        print("❌ Setup test environment - FAILED")
+        print(f"   Error: {str(e)}")
+        return False
 
 
 def validate_test_structure():
@@ -85,7 +101,7 @@ def main():
         # Test structure validation
         (validate_test_structure, "Test structure validation", False),
         # Setup test environment
-        ("cp tests/config/test.config.env .env", "Setup test environment", False),
+        (setup_test_environment, "Setup test environment", False),
         # Module import tests
         (
             "python -c \"from bot.config import Config; print('✅ Config module')\"",
@@ -126,10 +142,10 @@ def main():
             True,
         ),
         # Test execution
-        ("python -m pytest tests/unit/ -v --tb=short", "Unit tests (34 tests)", False),
+        ("python -m pytest tests/unit/ -v --tb=short", "Unit tests (33 tests)", False),
         (
             "python -m pytest tests/integration/ -v --tb=short",
-            "Integration tests (35 tests)",
+            "Integration tests (39 tests)",
             False,
         ),
         ("python run_tests.py", "Full test suite (72 tests)", False),

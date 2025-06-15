@@ -64,7 +64,7 @@ def mock_config():
     config.log_level = "INFO"
     config.webhook_url = None
     config.database_url = None
-    config.WAIT_FOR_CONFIRMATION = False
+    config.wait_for_confirmation = False
 
     return config
 

@@ -368,7 +368,7 @@ class BlockchainInterface:
             gas_price = self.w3.eth.gas_price
 
             # Apply multiplier
-            gas_price = int(gas_price * self.config.GAS_PRICE_MULTIPLIER)
+            gas_price = int(gas_price * self.config.gas_price_multiplier)
 
             # Build transaction
             tx = func.build_transaction(
@@ -406,7 +406,7 @@ class BlockchainInterface:
             logger.info(f"Transaction sent: {tx_hash.hex()}")
 
             # Wait for confirmation (optional)
-            if self.config.WAIT_FOR_CONFIRMATION:
+            if self.config.wait_for_confirmation:
                 receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash, timeout=120)
 
                 if receipt["status"] == 1:
@@ -429,7 +429,7 @@ class BlockchainInterface:
         """
         try:
             balance = self.w3.eth.get_balance(self.account.address)
-            return self.w3.from_wei(balance, "ether")
+            return Web3.from_wei(balance, "ether")
         except Exception as e:
             raise BlockchainError(f"Failed to get balance: {str(e)}")
 
