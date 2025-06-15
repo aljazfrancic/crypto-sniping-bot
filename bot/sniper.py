@@ -18,19 +18,20 @@ from bot.blockchain import BlockchainInterface
 from bot.trading import TradingEngine
 from bot.honeypot import HoneypotDetector
 from bot.utils import (
-    RateLimiter, 
-    with_retry, 
-    RetryConfig, 
+    RateLimiter,
+    with_retry,
+    RetryConfig,
     NotificationManager,
     PerformanceMonitor,
-    format_number
+    format_number,
 )
 from bot.exceptions import (
     ConfigurationError,
     BlockchainError,
     TradingError,
-    SecurityError
+    SecurityError,
 )
+
 
 # Configure logging with better formatting
 def setup_logging(log_level: str = "INFO"):
@@ -39,20 +40,21 @@ def setup_logging(log_level: str = "INFO"):
         "%(asctime)s - %(name)s - %(levelname)s - "
         "[%(filename)s:%(lineno)d] - %(message)s"
     )
-    
+
     logging.basicConfig(
         level=getattr(logging, log_level),
         format=log_format,
         handlers=[
             logging.FileHandler("sniper_bot.log"),
-            logging.StreamHandler(sys.stdout)
+            logging.StreamHandler(sys.stdout),
         ],
     )
-    
+
     # Reduce noise from third-party libraries
     logging.getLogger("web3").setLevel(logging.WARNING)
     logging.getLogger("urllib3").setLevel(logging.WARNING)
     logging.getLogger("asyncio").setLevel(logging.WARNING)
+
 
 logger = logging.getLogger(__name__)
 
@@ -62,7 +64,7 @@ class SniperBot:
 
     def __init__(self, config: Config):
         """Initialize the sniper bot with enhanced features.
-        
+
         Args:
             config: Bot configuration
         """
@@ -72,20 +74,19 @@ class SniperBot:
         self.blockchain = None
         self.trading = None
         self.honeypot_detector = None
-        
+
         # Enhanced tracking
         self.positions: Dict[str, Dict] = {}
         self.monitored_pairs: Set[str] = set()
         self.failed_pairs: Set[str] = set()
-        
+
         # Performance and reliability components
         self.rate_limiter = RateLimiter(
-            max_calls=self.config.max_rpc_calls_per_second,
-            time_window=1.0
+            max_calls=self.config.max_rpc_calls_per_second, time_window=1.0
         )
         self.performance_monitor = PerformanceMonitor()
         self.notification_manager = NotificationManager(self.config.webhook_url)
-        
+
         # Statistics
         self.stats = {
             "pairs_detected": 0,
@@ -96,7 +97,7 @@ class SniperBot:
             "honeypots_detected": 0,
             "total_profit_loss": 0.0,
         }
-        
+
         # Setup signal handlers for graceful shutdown
         signal.signal(signal.SIGINT, self._signal_handler)
         signal.signal(signal.SIGTERM, self._signal_handler)
@@ -110,37 +111,37 @@ class SniperBot:
         """Initialize all bot components asynchronously."""
         try:
             logger.info("🚀 Initializing Crypto Sniper Bot...")
-            
+
             # Setup Web3 connection with retry logic
             await self._setup_web3_connection()
-            
+
             # Initialize blockchain interface
             self.blockchain = BlockchainInterface(self.config)
             await self.blockchain.initialize()
-            
+
             # Initialize trading engine
             self.trading = TradingEngine(self.blockchain, self.config)
-            
+
             # Initialize honeypot detector
             self.honeypot_detector = HoneypotDetector(self.blockchain)
-            
+
             # Validate environment
             validation_result = self.config.validate_environment()
             if not validation_result["valid"]:
                 for error in validation_result["errors"]:
                     logger.error(f"❌ {error}")
                 raise ConfigurationError("Environment validation failed")
-            
+
             logger.info(f"✅ Connected to {validation_result['network']}")
             logger.info("✅ Bot initialization completed successfully")
-            
+
             # Send startup notification
             await self.notification_manager.send_notification(
                 f"🤖 Sniper Bot started on {validation_result['network']}",
                 level="info",
-                data={"network": validation_result["network"]}
+                data={"network": validation_result["network"]},
             )
-            
+
         except Exception as e:
             logger.error(f"❌ Failed to initialize bot: {e}")
             raise
@@ -155,7 +156,7 @@ class SniperBot:
             return
         except Exception as e:
             logger.warning(f"Primary RPC failed: {e}")
-        
+
         # Try backup RPCs
         for i, backup_url in enumerate(self.config.backup_rpc_urls):
             try:
@@ -165,7 +166,7 @@ class SniperBot:
                 return
             except Exception as e:
                 logger.warning(f"Backup RPC {i+1} failed: {e}")
-        
+
         raise BlockchainError("All RPC endpoints failed")
 
     async def _create_web3_connection(self, rpc_url: str) -> Web3:
@@ -174,13 +175,13 @@ class SniperBot:
             provider = Web3.WebsocketProvider(
                 rpc_url,
                 websocket_timeout=60,
-                websocket_kwargs={"max_size": 1024 * 1024 * 10}  # 10MB
+                websocket_kwargs={"max_size": 1024 * 1024 * 10},  # 10MB
             )
         else:
             provider = Web3.HTTPProvider(rpc_url)
 
         w3 = Web3(provider)
-        
+
         # Add middleware for PoA chains
         w3.middleware_onion.inject(geth_poa_middleware, layer=0)
 
@@ -226,31 +227,35 @@ class SniperBot:
 
                 # Get new events with rate limiting
                 await self.rate_limiter.acquire()
-                
+
                 self.performance_monitor.start_timer("event_processing")
                 new_events = event_filter.get_new_entries()
-                
+
                 for event in new_events:
                     self.stats["pairs_detected"] += 1
                     asyncio.create_task(self._handle_new_pair_async(event))
 
                 self.performance_monitor.end_timer("event_processing")
-                
+
                 # Small delay to prevent overwhelming the node
                 await asyncio.sleep(0.5)
 
             except ConnectionError as e:
                 reconnect_attempts += 1
-                logger.error(f"Connection error ({reconnect_attempts}/{max_reconnect_attempts}): {e}")
-                
+                logger.error(
+                    f"Connection error ({reconnect_attempts}/{max_reconnect_attempts}): {e}"
+                )
+
                 if reconnect_attempts >= max_reconnect_attempts:
-                    logger.error("Max reconnection attempts reached, switching to backup RPC")
+                    logger.error(
+                        "Max reconnection attempts reached, switching to backup RPC"
+                    )
                     await self._setup_web3_connection()
                     reconnect_attempts = 0
-                
+
                 event_filter = None
                 await asyncio.sleep(min(10 * reconnect_attempts, 60))
-                
+
             except Exception as e:
                 logger.error(f"Unexpected error in event loop: {e}")
                 event_filter = None
@@ -260,7 +265,7 @@ class SniperBot:
         """Handle new pair creation event asynchronously with comprehensive safety checks."""
         try:
             self.performance_monitor.start_timer("pair_analysis")
-            
+
             # Extract pair information
             token0 = event["args"]["token0"]
             token1 = event["args"]["token1"]
@@ -290,24 +295,32 @@ class SniperBot:
 
             # Comprehensive safety analysis
             safety_result = await self._comprehensive_safety_check(target_token, pair)
-            
+
             if safety_result["is_safe"]:
                 logger.info(f"✅ Token {target_token} passed all safety checks")
-                await self._execute_buy_strategy(target_token, pair, is_token0, safety_result)
+                await self._execute_buy_strategy(
+                    target_token, pair, is_token0, safety_result
+                )
             else:
-                logger.warning(f"❌ Token {target_token} failed safety checks: {safety_result['reason']}")
+                logger.warning(
+                    f"❌ Token {target_token} failed safety checks: {safety_result['reason']}"
+                )
                 self.failed_pairs.add(pair)
-                
+
                 if safety_result.get("is_honeypot", False):
                     self.stats["honeypots_detected"] += 1
 
             self.performance_monitor.end_timer("pair_analysis")
 
         except Exception as e:
-            logger.error(f"Error handling new pair {event.get('args', {}).get('pair', 'unknown')}: {e}")
+            logger.error(
+                f"Error handling new pair {event.get('args', {}).get('pair', 'unknown')}: {e}"
+            )
             self.failed_pairs.add(event.get("args", {}).get("pair", ""))
 
-    async def _comprehensive_safety_check(self, token_address: str, pair_address: str) -> Dict:
+    async def _comprehensive_safety_check(
+        self, token_address: str, pair_address: str
+    ) -> Dict:
         """Perform comprehensive safety checks on a token."""
         result = {
             "is_safe": False,
@@ -339,15 +352,17 @@ class SniperBot:
             liquidity_eth = await self.blockchain.get_pair_liquidity(pair_address)
             min_liquidity = self.config.min_liquidity
             result["checks"]["liquidity"] = liquidity_eth >= min_liquidity
-            
+
             if liquidity_eth < min_liquidity:
-                result["reason"] = f"Insufficient liquidity: {format_number(liquidity_eth)} < {format_number(min_liquidity)} ETH"
+                result["reason"] = (
+                    f"Insufficient liquidity: {format_number(liquidity_eth)} < {format_number(min_liquidity)} ETH"
+                )
                 return result
 
             # Check 4: Token information validation
             token_info = await self._get_token_info(token_address)
             result["checks"]["token_info"] = token_info is not None
-            
+
             if not token_info:
                 result["reason"] = "Failed to get token information"
                 return result
@@ -369,8 +384,7 @@ class SniperBot:
         try:
             erc20_abi = self.config.get_abi("erc20")
             contract = self.w3.eth.contract(
-                address=Web3.to_checksum_address(token_address),
-                abi=erc20_abi
+                address=Web3.to_checksum_address(token_address), abi=erc20_abi
             )
 
             # Get basic token info with timeout
@@ -403,38 +417,42 @@ class SniperBot:
                 "symbol": symbol,
                 "decimals": decimals,
                 "total_supply": total_supply,
-                "address": token_address
+                "address": token_address,
             }
 
         except Exception as e:
             logger.error(f"Failed to get token info for {token_address}: {e}")
             return None
 
-    async def _execute_buy_strategy(self, token_address: str, pair_address: str, is_token0: bool, safety_data: Dict):
+    async def _execute_buy_strategy(
+        self, token_address: str, pair_address: str, is_token0: bool, safety_data: Dict
+    ):
         """Execute buy strategy with enhanced error handling and position tracking."""
         try:
             self.stats["trades_attempted"] += 1
             self.performance_monitor.start_timer("trade_execution")
 
-            logger.info(f"💰 Executing buy for {safety_data['token_info']['symbol']} ({token_address})")
+            logger.info(
+                f"💰 Executing buy for {safety_data['token_info']['symbol']} ({token_address})"
+            )
 
             # Calculate buy amount based on available balance and risk management
-            buy_amount = min(self.config.buy_amount, await self._get_available_balance() * 0.1)  # Max 10% of balance
-            
+            buy_amount = min(
+                self.config.buy_amount, await self._get_available_balance() * 0.1
+            )  # Max 10% of balance
+
             if buy_amount <= 0:
                 logger.warning("Insufficient balance for trade")
                 return
 
             # Execute buy transaction
             tx_hash = await self.trading.buy_token(
-                token_address,
-                buy_amount,
-                self.config.slippage
+                token_address, buy_amount, self.config.slippage
             )
 
             if tx_hash:
                 logger.info(f"✅ Buy transaction sent: {tx_hash}")
-                
+
                 # Track position
                 self.positions[token_address] = {
                     "symbol": safety_data["token_info"]["symbol"],
@@ -454,8 +472,8 @@ class SniperBot:
                     data={
                         "token": safety_data["token_info"]["symbol"],
                         "amount": buy_amount,
-                        "tx_hash": tx_hash
-                    }
+                        "tx_hash": tx_hash,
+                    },
                 )
 
                 # Start position monitoring
@@ -476,15 +494,17 @@ class SniperBot:
             await self.notification_manager.send_notification(
                 f"❌ Buy failed for {safety_data.get('token_info', {}).get('symbol', 'UNKNOWN')}: {str(e)}",
                 level="error",
-                data={"token_address": token_address, "error": str(e)}
+                data={"token_address": token_address, "error": str(e)},
             )
 
     async def _get_available_balance(self) -> float:
         """Get available ETH balance."""
         try:
             await self.rate_limiter.acquire()
-            balance_wei = self.w3.eth.get_balance(self.w3.eth.default_account or self.blockchain.account.address)
-            return self.w3.from_wei(balance_wei, 'ether')
+            balance_wei = self.w3.eth.get_balance(
+                self.w3.eth.default_account or self.blockchain.account.address
+            )
+            return self.w3.from_wei(balance_wei, "ether")
         except Exception as e:
             logger.error(f"Failed to get balance: {e}")
             return 0.0
@@ -508,7 +528,10 @@ class SniperBot:
 
                 # Calculate profit/loss percentage
                 # This is simplified - in reality you'd need to track exact amounts
-                profit_loss = ((current_price - position.get("entry_price", current_price)) / position.get("entry_price", current_price)) * 100
+                profit_loss = (
+                    (current_price - position.get("entry_price", current_price))
+                    / position.get("entry_price", current_price)
+                ) * 100
 
                 # Check sell conditions
                 should_sell = False
@@ -532,7 +555,9 @@ class SniperBot:
     async def _get_token_price(self, token_address: str) -> float:
         """Get current token price."""
         try:
-            return await self.trading.get_position(token_address).get("current_price", 0.0)
+            return await self.trading.get_position(token_address).get(
+                "current_price", 0.0
+            )
         except Exception as e:
             logger.error(f"Failed to get price for {token_address}: {e}")
             return 0.0
@@ -553,7 +578,9 @@ class SniperBot:
                 return
 
             # Execute sell
-            tx_hash = await self.trading.sell_token(token_address, balance, 0)  # Market sell
+            tx_hash = await self.trading.sell_token(
+                token_address, balance, 0
+            )  # Market sell
 
             if tx_hash:
                 position["status"] = "sold"
@@ -570,8 +597,8 @@ class SniperBot:
                     data={
                         "token": position["symbol"],
                         "reason": reason,
-                        "tx_hash": tx_hash
-                    }
+                        "tx_hash": tx_hash,
+                    },
                 )
 
         except Exception as e:
@@ -582,11 +609,12 @@ class SniperBot:
         try:
             erc20_abi = self.config.get_abi("erc20")
             contract = self.w3.eth.contract(
-                address=Web3.to_checksum_address(token_address),
-                abi=erc20_abi
+                address=Web3.to_checksum_address(token_address), abi=erc20_abi
             )
-            
-            balance = contract.functions.balanceOf(self.blockchain.account.address).call()
+
+            balance = contract.functions.balanceOf(
+                self.blockchain.account.address
+            ).call()
             return balance
 
         except Exception as e:
@@ -604,14 +632,18 @@ class SniperBot:
                 logger.info(f"Trades successful: {self.stats['trades_successful']}")
                 logger.info(f"Trades failed: {self.stats['trades_failed']}")
                 logger.info(f"Honeypots detected: {self.stats['honeypots_detected']}")
-                logger.info(f"Active positions: {len([p for p in self.positions.values() if p['status'] != 'sold'])}")
-                
+                logger.info(
+                    f"Active positions: {len([p for p in self.positions.values() if p['status'] != 'sold'])}"
+                )
+
                 # Performance stats
                 perf_stats = self.performance_monitor.get_stats()
                 if perf_stats:
                     logger.info("⚡ Performance Stats:")
                     for operation, stats in perf_stats.items():
-                        logger.info(f"  {operation}: avg {stats['average']:.3f}s, count {stats['count']}")
+                        logger.info(
+                            f"  {operation}: avg {stats['average']:.3f}s, count {stats['count']}"
+                        )
 
                 await asyncio.sleep(300)  # Every 5 minutes
 
@@ -623,7 +655,7 @@ class SniperBot:
         """Enhanced main run loop with better error handling and graceful shutdown."""
         try:
             logger.info("🚀 Starting Crypto Sniper Bot...")
-            
+
             # Initialize all components
             await self.initialize()
 
@@ -648,24 +680,22 @@ class SniperBot:
     async def _cleanup(self):
         """Cleanup resources and save state."""
         logger.info("🧹 Cleaning up...")
-        
+
         self.running = False
-        
+
         # Close notification manager
         await self.notification_manager.close()
-        
+
         # Save final stats
         logger.info("📊 Final Statistics:")
         for key, value in self.stats.items():
             logger.info(f"  {key}: {value}")
-        
+
         # Send shutdown notification
         await self.notification_manager.send_notification(
-            "🛑 Sniper Bot shutting down",
-            level="info",
-            data=self.stats
+            "🛑 Sniper Bot shutting down", level="info", data=self.stats
         )
-        
+
         logger.info("✅ Cleanup completed")
 
 
@@ -674,14 +704,14 @@ async def main():
     try:
         # Load configuration
         config = Config()
-        
+
         # Setup logging
         setup_logging(config.log_level)
-        
+
         # Create and run bot
         bot = SniperBot(config)
         await bot.run()
-        
+
     except ConfigurationError as e:
         logger.error(f"❌ Configuration error: {e}")
         sys.exit(1)

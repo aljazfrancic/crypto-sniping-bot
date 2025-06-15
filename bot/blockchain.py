@@ -33,17 +33,13 @@ class BlockchainInterface:
         self.account = Account.from_key(config.private_key)
         self._abi_cache = {}
         self._contract_cache = {}
-        
+
         # Enhanced reliability features
         self.rate_limiter = RateLimiter(
-            max_calls=config.max_rpc_calls_per_second,
-            time_window=1.0
+            max_calls=config.max_rpc_calls_per_second, time_window=1.0
         )
-        self.circuit_breaker = CircuitBreaker(
-            failure_threshold=5,
-            timeout=60.0
-        )
-        
+        self.circuit_breaker = CircuitBreaker(failure_threshold=5, timeout=60.0)
+
         # Connection health monitoring
         self._last_health_check = 0
         self._health_check_interval = 30  # seconds
@@ -54,12 +50,14 @@ class BlockchainInterface:
         try:
             # Setup Web3 connection
             await self._setup_connection()
-            
+
             # Verify connection and chain
             await self._verify_connection()
-            
-            logger.info(f"✅ Blockchain interface initialized for chain {self.config.chain_id}")
-            
+
+            logger.info(
+                f"✅ Blockchain interface initialized for chain {self.config.chain_id}"
+            )
+
         except Exception as e:
             logger.error(f"Failed to initialize blockchain interface: {e}")
             raise BlockchainError(f"Initialization failed: {e}")
@@ -75,7 +73,7 @@ class BlockchainInterface:
                 return
         except Exception as e:
             logger.warning(f"Primary RPC failed: {e}")
-        
+
         # Try backup RPCs
         for i, backup_url in enumerate(self.config.backup_rpc_urls):
             try:
@@ -86,58 +84,60 @@ class BlockchainInterface:
                     return
             except Exception as e:
                 logger.warning(f"Backup RPC {i+1} failed: {e}")
-        
+
         raise ConnectionError("All RPC endpoints failed")
 
     async def _verify_connection(self):
         """Verify connection and chain ID."""
         if not self.w3 or not self.w3.is_connected():
             raise ConnectionError("Not connected to any RPC endpoint")
-        
+
         # Verify chain ID
         actual_chain_id = self.w3.eth.chain_id
         if actual_chain_id != self.config.chain_id:
             raise BlockchainError(
                 f"Chain ID mismatch: expected {self.config.chain_id}, got {actual_chain_id}"
             )
-        
+
         # Test a simple call
         await self.rate_limiter.acquire()
         block_number = self.w3.eth.block_number
-        logger.info(f"Connected to chain {actual_chain_id}, latest block: {block_number}")
+        logger.info(
+            f"Connected to chain {actual_chain_id}, latest block: {block_number}"
+        )
 
     async def health_check(self) -> bool:
         """Perform connection health check."""
         try:
             current_time = asyncio.get_event_loop().time()
-            
+
             # Only check if enough time has passed
             if current_time - self._last_health_check < self._health_check_interval:
                 return True
-            
+
             self._last_health_check = current_time
-            
+
             if not self.w3 or not self.w3.is_connected():
                 self._connection_failures += 1
                 return False
-            
+
             # Test with a simple call
             await self.rate_limiter.acquire()
             self.w3.eth.block_number
-            
+
             # Reset failure count on success
             self._connection_failures = 0
             return True
-            
+
         except Exception as e:
             self._connection_failures += 1
             logger.warning(f"Health check failed: {e}")
-            
+
             # Auto-reconnect if too many failures
             if self._connection_failures >= 3:
                 logger.error("Multiple health check failures, attempting reconnect...")
                 await self._setup_connection()
-            
+
             return False
 
     def load_abi(self, name: str) -> list:
@@ -245,15 +245,15 @@ class BlockchainInterface:
         """Get liquidity in ETH for a pair with enhanced error handling."""
         try:
             await self.rate_limiter.acquire()
-            
+
             # Get or create contract instance
             pair_contract = await self._get_contract(pair_address, "pair")
-            
+
             # Get reserves with circuit breaker protection
             reserves = await self.circuit_breaker.call(
                 pair_contract.functions.getReserves().call
             )
-            
+
             await self.rate_limiter.acquire()
             token0 = await self.circuit_breaker.call(
                 pair_contract.functions.token0().call
@@ -277,21 +277,20 @@ class BlockchainInterface:
     async def _get_contract(self, address: str, contract_type: str) -> Contract:
         """Get contract instance with caching."""
         cache_key = f"{address}_{contract_type}"
-        
+
         if cache_key in self._contract_cache:
             return self._contract_cache[cache_key]
-        
+
         try:
             abi = self.load_abi(contract_type)
             contract = self.w3.eth.contract(
-                address=Web3.to_checksum_address(address),
-                abi=abi
+                address=Web3.to_checksum_address(address), abi=abi
             )
-            
+
             # Cache the contract instance
             self._contract_cache[cache_key] = contract
             return contract
-            
+
         except Exception as e:
             logger.error(f"Failed to create contract {contract_type} at {address}: {e}")
             raise BlockchainError(f"Contract creation failed: {e}")
@@ -301,7 +300,7 @@ class BlockchainInterface:
         """Get token price in ETH with enhanced error handling."""
         try:
             await self.rate_limiter.acquire()
-            
+
             pair_contract = await self._get_contract(pair_address, "pair")
             reserves = await self.circuit_breaker.call(
                 pair_contract.functions.getReserves().call

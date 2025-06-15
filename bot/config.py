@@ -54,15 +54,15 @@ class Config:
         # Generate or load encryption key for sensitive data
         key_file = Path(".secret_key")
         if key_file.exists():
-            with open(key_file, 'rb') as f:
+            with open(key_file, "rb") as f:
                 self._encryption_key = f.read()
         else:
             self._encryption_key = Fernet.generate_key()
-            with open(key_file, 'wb') as f:
+            with open(key_file, "wb") as f:
                 f.write(self._encryption_key)
             # Secure the key file
             os.chmod(key_file, 0o600)
-        
+
         self._cipher = Fernet(self._encryption_key)
 
     def _validate_config(self) -> None:
@@ -86,7 +86,16 @@ class Config:
 
         # Validate chain ID is supported
         chain_id = self.chain_id
-        supported_chains = [1, 56, 137, 42161, 10, 43114, 250, 31337]  # Add mainnet chains
+        supported_chains = [
+            1,
+            56,
+            137,
+            42161,
+            10,
+            43114,
+            250,
+            31337,
+        ]  # Add mainnet chains
         if chain_id not in supported_chains:
             logger.warning(f"Chain ID {chain_id} may not be fully supported")
 
@@ -110,32 +119,34 @@ class Config:
     def _validate_private_key(self) -> None:
         """Validate private key with enhanced security checks."""
         private_key = os.getenv("PRIVATE_KEY", "")
-        
+
         # Check for test/demo keys (security risk)
         dangerous_keys = [
             "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80",  # Hardhat test key
             "0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d",  # Another common test key
         ]
-        
+
         # Also check for obvious test patterns
         test_patterns = [
             "1234567890",  # Sequential numbers
             "abcdef1234",  # Simple hex patterns
-            "deadbeef",   # Common test hex
-            "cafebabe",   # Another common test hex
+            "deadbeef",  # Common test hex
+            "cafebabe",  # Another common test hex
         ]
-        
+
         if private_key in dangerous_keys:
             raise ConfigError("DANGER: Using test private key! This will expose funds!")
-            
+
         # Check for test patterns in the key
         for pattern in test_patterns:
             if pattern in private_key.lower():
-                raise ConfigError("DANGER: Using test private key! This will expose funds!")
-        
+                raise ConfigError(
+                    "DANGER: Using test private key! This will expose funds!"
+                )
+
         if not private_key.startswith("0x"):
             private_key = "0x" + private_key
-            
+
         try:
             if len(bytes.fromhex(private_key[2:])) != 32:
                 raise ValueError("Invalid private key length")
@@ -373,11 +384,13 @@ class Config:
         }
 
         if include_sensitive:
-            config_dict.update({
-                "rpc_url": self.rpc_url,
-                "router_address": self.router_address,
-                "factory_address": self.factory_address,
-                "weth_address": self.weth_address,
-            })
+            config_dict.update(
+                {
+                    "rpc_url": self.rpc_url,
+                    "router_address": self.router_address,
+                    "factory_address": self.factory_address,
+                    "weth_address": self.weth_address,
+                }
+            )
 
         return config_dict

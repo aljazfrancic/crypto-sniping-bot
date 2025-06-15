@@ -52,7 +52,7 @@ def mock_config():
     config.get_abi = Mock(return_value=[])
     config.get_network_name = Mock(return_value="Hardhat Local")
     config.RPC_URL = "http://localhost:8545"
-    
+
     # Add missing properties for the current implementation
     config.max_rpc_calls_per_second = 10
     config.backup_rpc_urls = []
@@ -65,7 +65,7 @@ def mock_config():
     config.webhook_url = None
     config.database_url = None
     config.WAIT_FOR_CONFIRMATION = False
-    
+
     return config
 
 
@@ -99,12 +99,15 @@ class TestBlockchainInterface:
     @pytest.mark.asyncio
     async def test_initialization(self, mock_w3, mock_config):
         """Test blockchain interface initialization"""
-        with patch.object(BlockchainInterface, '_setup_connection', new_callable=AsyncMock) as mock_setup, \
-             patch.object(BlockchainInterface, '_verify_connection', new_callable=AsyncMock) as mock_verify:
-            
+        with patch.object(
+            BlockchainInterface, "_setup_connection", new_callable=AsyncMock
+        ) as mock_setup, patch.object(
+            BlockchainInterface, "_verify_connection", new_callable=AsyncMock
+        ) as mock_verify:
+
             blockchain = BlockchainInterface(mock_config)
             await blockchain.initialize()
-            
+
             mock_setup.assert_called_once()
             mock_verify.assert_called_once()
             assert blockchain.config == mock_config
@@ -127,9 +130,11 @@ class TestBlockchainInterface:
         )
 
         # Mock _get_contract method
-        with patch.object(blockchain, '_get_contract', new_callable=AsyncMock) as mock_get_contract:
+        with patch.object(
+            blockchain, "_get_contract", new_callable=AsyncMock
+        ) as mock_get_contract:
             mock_get_contract.return_value = mock_pair
-            
+
             liquidity = await blockchain.get_pair_liquidity(
                 "0x2222222222222222222222222222222222222222"
             )
@@ -153,9 +158,11 @@ class TestBlockchainInterface:
         )
 
         # Mock _get_contract method
-        with patch.object(blockchain, '_get_contract', new_callable=AsyncMock) as mock_get_contract:
+        with patch.object(
+            blockchain, "_get_contract", new_callable=AsyncMock
+        ) as mock_get_contract:
             mock_get_contract.return_value = mock_pair
-            
+
             price = await blockchain.get_token_price(
                 "0x2222222222222222222222222222222222222222", True
             )
@@ -228,9 +235,7 @@ class TestHoneypotDetector:
 
         mock_w3.eth.contract.side_effect = contract_side_effect
 
-        result = detector.analyze_token(
-            "0x1111111111111111111111111111111111111111"
-        )
+        result = detector.analyze_token("0x1111111111111111111111111111111111111111")
         assert isinstance(result, dict)
         assert "is_honeypot" in result
 
@@ -249,9 +254,7 @@ class TestHoneypotDetector:
         mock_w3.eth.contract.return_value = mock_token
         mock_w3.eth.get_code.return_value = b"0x606060"
 
-        result = detector._check_honeypot(
-            "0x1111111111111111111111111111111111111111"
-        )
+        result = detector._check_honeypot("0x1111111111111111111111111111111111111111")
         assert isinstance(result, bool)
 
     @pytest.mark.asyncio
@@ -263,9 +266,15 @@ class TestHoneypotDetector:
 
         # Mock token contract
         mock_token = Mock()
-        mock_token.functions.maxTransactionAmount.return_value.call.side_effect = ContractLogicError("Not found")
-        mock_token.functions.maxWalletAmount.return_value.call.side_effect = ContractLogicError("Not found")
-        mock_token.functions.tradingEnabled.return_value.call.side_effect = ContractLogicError("Not found")
+        mock_token.functions.maxTransactionAmount.return_value.call.side_effect = (
+            ContractLogicError("Not found")
+        )
+        mock_token.functions.maxWalletAmount.return_value.call.side_effect = (
+            ContractLogicError("Not found")
+        )
+        mock_token.functions.tradingEnabled.return_value.call.side_effect = (
+            ContractLogicError("Not found")
+        )
 
         mock_w3.eth.contract.return_value = mock_token
         mock_w3.eth.get_code.return_value = b"0x606060"
@@ -314,41 +323,46 @@ class TestConfig:
     def test_config_validation(self):
         """Test config validation"""
         # Mock environment variables
-        with patch.dict('os.environ', {
-            'RPC_URL': 'http://localhost:8545',
-            'PRIVATE_KEY': '0x' + '1' * 64,
-            'ROUTER_ADDRESS': '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
-            'FACTORY_ADDRESS': '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
-            'WETH_ADDRESS': '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
-            'CHAIN_ID': '31337',
-            'BUY_AMOUNT': '0.1',
-            'SLIPPAGE': '5'
-        }):
+        with patch.dict(
+            "os.environ",
+            {
+                "RPC_URL": "http://localhost:8545",
+                "PRIVATE_KEY": "0x" + "1" * 64,
+                "ROUTER_ADDRESS": "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
+                "FACTORY_ADDRESS": "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
+                "WETH_ADDRESS": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+                "CHAIN_ID": "31337",
+                "BUY_AMOUNT": "0.1",
+                "SLIPPAGE": "5",
+            },
+        ):
             # Mock the file operations
-            with patch('os.path.exists', return_value=False), \
-                 patch('builtins.open', mock_open()), \
-                 patch('os.chmod'), \
-                 patch.object(Config, '_load_abis'):
-                
+            with patch("os.path.exists", return_value=False), patch(
+                "builtins.open", mock_open()
+            ), patch("os.chmod"), patch.object(Config, "_load_abis"):
+
                 config = Config()
-                assert config.rpc_url == 'http://localhost:8545'
+                assert config.rpc_url == "http://localhost:8545"
                 assert config.chain_id == 31337
 
     def test_invalid_private_key(self):
         """Test invalid private key validation"""
         from bot.config import ConfigError
-        
-        with patch.dict('os.environ', {
-            'RPC_URL': 'http://localhost:8545',
-            'PRIVATE_KEY': 'invalid_key',
-            'ROUTER_ADDRESS': '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
-            'FACTORY_ADDRESS': '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
-            'WETH_ADDRESS': '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
-        }):
-            with patch('os.path.exists', return_value=False), \
-                 patch('builtins.open', mock_open()), \
-                 patch('os.chmod'):
-                
+
+        with patch.dict(
+            "os.environ",
+            {
+                "RPC_URL": "http://localhost:8545",
+                "PRIVATE_KEY": "invalid_key",
+                "ROUTER_ADDRESS": "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
+                "FACTORY_ADDRESS": "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
+                "WETH_ADDRESS": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+            },
+        ):
+            with patch("os.path.exists", return_value=False), patch(
+                "builtins.open", mock_open()
+            ), patch("os.chmod"):
+
                 with pytest.raises(ConfigError):
                     Config()
 
@@ -365,44 +379,47 @@ class TestBlockchainInterfaceAdvanced:
         """Test building transaction"""
         blockchain = BlockchainInterface(mock_config)
         blockchain.w3 = mock_w3
-        
+
         # Mock function call
         mock_func = Mock()
         mock_func.build_transaction.return_value = {
-            'to': '0x1234567890123456789012345678901234567890',
-            'data': '0xabcdef',
-            'value': 0,
-            'gas': 360000,
-            'gasPrice': 20000000000,
-            'nonce': 1
+            "to": "0x1234567890123456789012345678901234567890",
+            "data": "0xabcdef",
+            "value": 0,
+            "gas": 360000,
+            "gasPrice": 20000000000,
+            "nonce": 1,
         }
-        
+
         tx = blockchain.build_transaction(mock_func, value=0)
-        assert 'to' in tx
-        assert 'gasPrice' in tx
-        assert 'nonce' in tx
+        assert "to" in tx
+        assert "gasPrice" in tx
+        assert "nonce" in tx
 
     @pytest.mark.asyncio
     async def test_send_transaction(self, mock_w3, mock_config):
         """Test sending transaction"""
         blockchain = BlockchainInterface(mock_config)
         blockchain.w3 = mock_w3
-        
+
         tx = {
-            'to': '0x1234567890123456789012345678901234567890',
-            'data': '0xabcdef',
-            'value': 0,
-            'gas': 21000,
-            'gasPrice': 20000000000,
-            'nonce': 1
+            "to": "0x1234567890123456789012345678901234567890",
+            "data": "0xabcdef",
+            "value": 0,
+            "gas": 21000,
+            "gasPrice": 20000000000,
+            "nonce": 1,
         }
-        
+
         # Mock account signing
         mock_signed_tx = Mock()
         mock_signed_tx.rawTransaction = b"0x" + b"1" * 64
-        
-        with patch.object(blockchain.rate_limiter, 'acquire', new_callable=AsyncMock), \
-             patch.object(blockchain.account, 'sign_transaction', return_value=mock_signed_tx):
+
+        with patch.object(
+            blockchain.rate_limiter, "acquire", new_callable=AsyncMock
+        ), patch.object(
+            blockchain.account, "sign_transaction", return_value=mock_signed_tx
+        ):
             tx_hash = await blockchain.send_transaction(tx)
             assert tx_hash is not None
 
@@ -447,9 +464,11 @@ class TestBlockchainInterfaceMore:
 
         # Mock sniper contract (which seems to be missing in the current implementation)
         mock_sniper_contract = Mock()
-        mock_sniper_contract.functions.getTokenBalance.return_value.call.return_value = 1000 * 10**18
+        mock_sniper_contract.functions.getTokenBalance.return_value.call.return_value = (
+            1000 * 10**18
+        )
         blockchain.sniper_contract = mock_sniper_contract
-        
+
         balance = await blockchain.get_token_balance(
             "0x1111111111111111111111111111111111111111"
         )
@@ -460,10 +479,10 @@ class TestBlockchainInterfaceMore:
         """Test verifying sniper contract"""
         blockchain = BlockchainInterface(mock_config)
         blockchain.w3 = mock_w3
-        
+
         # Mock contract existence
         mock_w3.eth.get_code.return_value = b"0x606060"
-        
+
         verified = await blockchain.verify_sniper_contract()
         assert isinstance(verified, bool)
 
@@ -480,7 +499,7 @@ class TestSniperBot:
         bot.honeypot = Mock(spec=HoneypotDetector)
         bot.running = False
         bot.positions = {}
-        
+
         # Mock async methods
         bot.initialize = AsyncMock()
         bot.is_token_safe = AsyncMock(return_value=True)
@@ -488,13 +507,13 @@ class TestSniperBot:
         bot.execute_buy = AsyncMock(return_value="0xtxhash")
         bot.execute_sell = AsyncMock(return_value="0xtxhash")
         bot.cleanup = Mock()
-        
+
         return bot
 
     @pytest.mark.asyncio
     async def test_initialize(self, mock_w3, mock_config):
         """Test sniper bot initialization"""
-        with patch.object(SniperBot, '__init__', return_value=None):
+        with patch.object(SniperBot, "__init__", return_value=None):
             bot = SniperBot.__new__(SniperBot)
             bot.config = mock_config
             bot.blockchain = Mock()
@@ -502,7 +521,7 @@ class TestSniperBot:
             bot.trading = Mock()
             bot.honeypot = Mock()
             bot.initialize = AsyncMock()
-            
+
             await bot.initialize()
             # Just ensure it doesn't crash
 
@@ -510,23 +529,25 @@ class TestSniperBot:
     async def test_is_token_safe_false(self, mock_sniper_bot):
         """Test token safety check returning false"""
         mock_sniper_bot.is_token_safe.return_value = False
-        result = await mock_sniper_bot.is_token_safe("0x1234567890123456789012345678901234567890")
+        result = await mock_sniper_bot.is_token_safe(
+            "0x1234567890123456789012345678901234567890"
+        )
         assert result is False
 
     @pytest.mark.asyncio
     async def test_handle_new_pair(self, mock_sniper_bot):
         """Test handling new pair event"""
         event_data = {
-            'args': {
-                'token0': '0x1111111111111111111111111111111111111111',
-                'token1': '0x2222222222222222222222222222222222222222',
-                'pair': '0x3333333333333333333333333333333333333333'
+            "args": {
+                "token0": "0x1111111111111111111111111111111111111111",
+                "token1": "0x2222222222222222222222222222222222222222",
+                "pair": "0x3333333333333333333333333333333333333333",
             }
         }
-        
+
         # Mock token safety check
         mock_sniper_bot.is_token_safe.return_value = True
-        
+
         await mock_sniper_bot.handle_new_pair(event_data)
         mock_sniper_bot.handle_new_pair.assert_called_once_with(event_data)
 
@@ -534,16 +555,16 @@ class TestSniperBot:
     async def test_handle_new_pair_unsafe(self, mock_sniper_bot):
         """Test handling new pair with unsafe token"""
         event_data = {
-            'args': {
-                'token0': '0x1111111111111111111111111111111111111111',
-                'token1': '0x2222222222222222222222222222222222222222',
-                'pair': '0x3333333333333333333333333333333333333333'
+            "args": {
+                "token0": "0x1111111111111111111111111111111111111111",
+                "token1": "0x2222222222222222222222222222222222222222",
+                "pair": "0x3333333333333333333333333333333333333333",
             }
         }
-        
+
         # Mock token safety check to return False
         mock_sniper_bot.is_token_safe.return_value = False
-        
+
         await mock_sniper_bot.handle_new_pair(event_data)
         mock_sniper_bot.handle_new_pair.assert_called_once_with(event_data)
 
@@ -572,4 +593,5 @@ class TestSniperBot:
 # Helper function for mocking file operations
 def mock_open(data=""):
     from unittest.mock import mock_open as mock_open_func
+
     return mock_open_func(read_data=data)

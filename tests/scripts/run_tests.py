@@ -7,17 +7,21 @@ import subprocess
 import sys
 from pathlib import Path
 
+
 def run_all_tests():
     """Run all tests with coverage."""
     print("Running all tests...")
     cmd = [
-        sys.executable, "-m", "pytest", 
-        "--cov=bot", 
+        sys.executable,
+        "-m",
+        "pytest",
+        "--cov=bot",
         "--cov-report=term-missing",
         "--cov-report=html:htmlcov",
-        "-v"
+        "-v",
     ]
     return subprocess.run(cmd)
+
 
 def run_unit_tests():
     """Run only unit tests."""
@@ -25,11 +29,13 @@ def run_unit_tests():
     cmd = [sys.executable, "-m", "pytest", "-m", "unit", "-v"]
     return subprocess.run(cmd)
 
+
 def run_integration_tests():
     """Run only integration tests."""
     print("Running integration tests...")
     cmd = [sys.executable, "-m", "pytest", "-m", "integration", "-v"]
     return subprocess.run(cmd)
+
 
 def run_clean_test():
     """Run the clean comprehensive test."""
@@ -37,11 +43,13 @@ def run_clean_test():
     cmd = [sys.executable, "test_clean.py"]
     return subprocess.run(cmd)
 
+
 def run_security_tests():
     """Run security-focused tests."""
     print("Running security tests...")
     cmd = [sys.executable, "-m", "pytest", "-m", "security", "-v"]
     return subprocess.run(cmd)
+
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
@@ -59,5 +67,5 @@ if __name__ == "__main__":
             sys.exit(1)
     else:
         result = run_all_tests()
-    
+
     sys.exit(result.returncode)
