@@ -10,7 +10,7 @@ setup(
         "eth-account==0.9.0",
         "eth-utils==2.3.1",
         "hexbytes<0.4.0,>=0.1.0",
-        "websockets==11.0.3",
+        "websockets==15.0.1",
         "eth-typing==4.0.0",
     ],
     python_requires=">=3.8",
