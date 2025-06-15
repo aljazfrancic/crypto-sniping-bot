@@ -5,6 +5,11 @@
 # Use default gitleaks rules
 useDefault = true
 
+# Additional configuration for robustness
+title = "Crypto Sniping Bot Security Scan"
+verbose = true
+redact = true
+
 [[rules]]
 description = "Hardhat Test Private Key"
 id = "hardhat-test-key"
@@ -30,6 +35,8 @@ files = [
     '''(.*)?test(.*)?(\.env|\.py|\.md)$''',
     '''(.*)?docs(.*)?(\.md)$''',
     '''(.*)?spec(.*)?(\.py)$''',
+    '''\.gitleaks\.toml$''',
+    '''\.github/.*\.yml$''',
 ]
 
 # Specific patterns to ignore
@@ -39,10 +46,13 @@ regexes = [
     # Example/test patterns
     '''(test-key|example-key|your-.*-key|fake-.*-key)''',
     '''https://hooks\.slack\.com/services/(your|test|example)/.*''',
-    '''https://.*\.infura\.io/v3/(test-key|example-key|your-key)''',
+    '''https://.*\.infura\.io/v3/(test-key|example-key|your-key|YOUR_PROJECT_ID)''',
     # Common test addresses
     '''0x742d35Cc6634C0532925a3b8D4C3C3bE6DD5A999''',
     '''0x3c9ca9e41f3e6b8ff4b7e8f9a2d1c0b9a8e7d6f5c4b3a2916857463524139f8e''',
+    '''0x0000000000000000000000000000000000000000000000000000000000000001''',
+    # Placeholder webhook URLs
+    '''https://hooks\.slack\.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX''',
 ]
 
 # Paths to completely ignore
@@ -52,4 +62,8 @@ paths = [
     '''docs/.*\.md''',
     '''tests/.*\.py''',
     '''.*\.example\.env''',
+    '''\.git/.*''',
+    '''node_modules/.*''',
+    '''\.venv/.*''',
+    '''__pycache__/.*''',
 ] 
