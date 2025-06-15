@@ -36,23 +36,29 @@ class RateLimiter:
 
     async def acquire(self) -> None:
         """Acquire permission to make a call."""
-        async with self._lock:
-            now = time.time()
+        while True:
+            async with self._lock:
+                now = time.time()
 
-            # Remove old calls outside the time window
-            while self.calls and self.calls[0] <= now - self.time_window:
-                self.calls.popleft()
+                # Remove old calls outside the time window
+                while self.calls and self.calls[0] <= now - self.time_window:
+                    self.calls.popleft()
 
-            # Wait if we've exceeded the rate limit
-            if len(self.calls) >= self.max_calls:
+                # Check if we can make the call now
+                if len(self.calls) < self.max_calls:
+                    self.calls.append(now)
+                    return
+
+                # Calculate wait time if we've exceeded the rate limit
                 wait_time = self.time_window - (now - self.calls[0])
-                if wait_time > 0:
-                    logger.debug(f"Rate limit reached, waiting {wait_time:.2f} seconds")
-                    await asyncio.sleep(wait_time)
-                    return await self.acquire()
-
-            # Record this call
-            self.calls.append(now)
+                
+            # Wait outside the lock to avoid blocking other operations
+            if wait_time > 0:
+                logger.debug(f"Rate limit reached, waiting {wait_time:.2f} seconds")
+                await asyncio.sleep(wait_time)
+            else:
+                # Small delay to prevent tight loop
+                await asyncio.sleep(0.01)
 
 
 class RetryConfig:

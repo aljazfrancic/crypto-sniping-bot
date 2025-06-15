@@ -11,7 +11,7 @@ import sys
 from datetime import datetime
 from typing import Dict, Set, Optional
 from web3 import Web3
-from web3.middleware import geth_poa_middleware
+from web3.middleware import ExtraDataToPOAMiddleware
 
 from bot.config import Config
 from bot.blockchain import BlockchainInterface
@@ -183,7 +183,7 @@ class SniperBot:
         w3 = Web3(provider)
 
         # Add middleware for PoA chains
-        w3.middleware_onion.inject(geth_poa_middleware, layer=0)
+        w3.middleware_onion.inject(ExtraDataToPOAMiddleware, layer=0)
 
         # Test connection
         if not w3.is_connected():

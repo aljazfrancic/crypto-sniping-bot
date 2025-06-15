@@ -809,11 +809,11 @@ class ConnectionError(SniperBotError):
 from bot.sniper import SniperBot
 from bot.config import Config
 
-# Load configuration
-config = Config()
+    # Load configuration
+    config = Config()
 
 # Initialize bot
-bot = SniperBot(config)
+    bot = SniperBot(config)
 
 # Start trading
 await bot.start()
@@ -825,7 +825,7 @@ await bot.start()
 from bot.trading import TradingEngine
 from bot.config import Config
 
-config = Config()
+    config = Config()
 trading_engine = TradingEngine(config)
 
 # Execute a buy order
@@ -844,7 +844,7 @@ print(f"Trade result: {result.success}, TX: {result.transaction_hash}")
 from bot.security import SecurityManager
 from bot.config import Config
 
-config = Config()
+    config = Config()
 security = SecurityManager(config)
 
 # Analyze token security
@@ -862,7 +862,7 @@ for warning in report.warnings:
 from bot.analytics import TradingAnalytics
 from bot.config import Config
 
-config = Config()
+    config = Config()
 analytics = TradingAnalytics(config)
 
 # Get performance metrics
